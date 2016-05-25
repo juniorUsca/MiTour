@@ -50,8 +50,8 @@ public class SplashActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            Intent mainIntent = new Intent(SplashActivity.this, MapsActivity.class);
+            /// redirection!
+            Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
 
             SplashActivity.this.startActivity(mainIntent);
             SplashActivity.this.finish();
