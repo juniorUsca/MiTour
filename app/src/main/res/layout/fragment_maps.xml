@@ -1,9 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.debugcc.mitour.Fragments.MapsFragment">
+    tools:context="com.debugcc.mitour.Fragments.MapsFragment"
+    android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/background_header_seccion_inicio"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Lo mas pedidos"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/color_light" />
 
     <fragment
         android:id="@+id/map"
@@ -15,7 +27,7 @@
         class="com.google.android.gms.maps.SupportMapFragment" />
     -->
 
-</FrameLayout>
+</LinearLayout>
 
 
 
