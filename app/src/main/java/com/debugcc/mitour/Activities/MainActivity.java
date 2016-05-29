@@ -15,11 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.debugcc.mitour.Fragments.MapsFragment;
+import com.debugcc.mitour.Fragments.main.MapsFragment;
 import com.debugcc.mitour.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static int ZERO = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +48,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.container_main,new CalendarFragment())
-                .commit();*/
+                .replace(R.id.container_main,new MapsFragment())
+                .commit();
 
-        //setTitle();
-        //item.setChecked(true);
+        MenuItem item = navigationView.getMenu().getItem(ZERO);
+        setTitle(item.getTitle());
+        item.setChecked(true);
+
+
     }
 
     @Override

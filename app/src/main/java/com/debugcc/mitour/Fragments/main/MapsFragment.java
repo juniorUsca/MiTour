@@ -1,14 +1,17 @@
-package com.debugcc.mitour.Fragments;
+package com.debugcc.mitour.Fragments.main;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.debugcc.mitour.Adapters.CategoryPlaceAdapter;
+import com.debugcc.mitour.Models.CategoryPlace;
 import com.debugcc.mitour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +19,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,11 +81,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        //setUpMapIfNeeded();
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
-
         mapFragment.getMapAsync(this);
 
         return v;
@@ -90,8 +92,36 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /// mayoria de configuraciones
+        /// Charge categories
+        ArrayList<CategoryPlace> categoriesPlaces = new ArrayList<>();
+
+        CategoryPlace c1 = new CategoryPlace();
+        c1.setImage(R.drawable.logo);
+        c1.setName("Todas");
+
+        CategoryPlace c2 = new CategoryPlace();
+        c2.setImage(R.drawable.logo);
+        c2.setName("Comidas muchas");
+
+        CategoryPlace c3 = new CategoryPlace();
+        c3.setImage(R.drawable.logo);
+        c3.setName("Museos asd asd");
+
+        categoriesPlaces.add(c1);
+        categoriesPlaces.add(c2);
+        categoriesPlaces.add(c3);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        RecyclerView recyclerView_categoriesPlaces = (RecyclerView) this.getActivity().findViewById(R.id.recycler_categoriesPlaces);
+        recyclerView_categoriesPlaces.setHasFixedSize(true);
+        recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(categoriesPlaces));
+        recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
+        //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
+
     }
+
 
     /**
      * Manipulates the map once available.
