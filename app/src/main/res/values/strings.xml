@@ -13,5 +13,12 @@
 
 
     <string name="home">Home</string>
+    <string name="provider_gps">gps</string>
+    <string name="text_home">Inicio</string>
+    <string name="text_memories">Recuerdos</string>
+    <string name="text_map">Mapa</string>
+    <string name="text_places">Lugares Cercanos</string>
+    <string name="text_travel">Recorrido</string>
+    <string name="text_myTrips">Mis Viajes</string>
 
 </resources>

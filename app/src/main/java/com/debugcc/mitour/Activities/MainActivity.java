@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static int ZERO = 0;
+    FloatingActionButton fab_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,16 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        fab_main = (FloatingActionButton) findViewById(R.id.fab_mylocation);
+        fab_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -90,18 +101,15 @@ public class MainActivity extends AppCompatActivity
         Fragment genericFragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
+        fab_main.hide();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
             genericFragment = MapsFragment.newInstance("hola1","hola2");
-        } else if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+            fab_main.setImageResource(R.drawable.ic_my_location_vector);
+            fab_main.show();
+        } else if (id == R.id.nav_map) {
 
         } else if (id == R.id.nav_share) {
 

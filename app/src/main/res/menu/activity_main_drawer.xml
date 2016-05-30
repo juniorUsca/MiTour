@@ -4,28 +4,41 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_vector"
+            android:title="@string/text_home" />
+        <item
+            android:id="@+id/nav_memories"
             android:icon="@drawable/ic_menu_camera"
-            android:title="@string/home" />
+            android:title="@string/text_memories" />
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_location_on_vector"
+            android:title="@string/text_map" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_places"
+            android:icon="@drawable/ic_near_me_vector"
+            android:title="@string/text_places" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_travel"
+            android:icon="@drawable/ic_timeline_vector"
+            android:title="@string/text_travel" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_trips"
+            android:icon="@drawable/ic_map_vector"
+            android:title="@string/text_myTrips" />
     </group>
 
-    <item android:title="Communicate">
+
+    <item android:title="Extras">
         <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Aplicaciones Recomendadas" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_setting_light"
+                android:title="Configuraciones" />
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"

@@ -1,22 +1,33 @@
 package com.debugcc.mitour.Fragments.main;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.debugcc.mitour.Adapters.CategoryPlaceAdapter;
 import com.debugcc.mitour.Models.CategoryPlace;
@@ -29,7 +40,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +65,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     //private OnFragmentInteractionListener mListener;
 
+
     private GoogleMap mMap;
+    private FloatingActionButton fab_myposition;
+    private static String TAG = "MapsFragment";
+    private LocationManager mLocationManager;
+
+    private ArrayList<MarkerOptions> mMarkers;
+    private MarkerOptions mMarkerMyLocation;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -90,9 +111,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        fab_myposition = (FloatingActionButton) getActivity().findViewById(R.id.fab_mylocation);
+        fab_myposition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Espera un momento que cargue el mapa", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
         return v;
     }
@@ -160,16 +191,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        fab.hide();
-
     }
 
 
@@ -186,6 +207,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mLocationManager = (LocationManager)
+                getActivity().getSystemService(Context.LOCATION_SERVICE);
+        mMarkers = new ArrayList<>();
+
+        fab_myposition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                centerOnMyLocation();
+            }
+        });
+
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Log.e(TAG, "onMapReady: NO PERMISSION" );
+        }
+        LocationListener locationListener = new MyLocationListener();
+        mLocationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+
         // Add a marker in Sydney and move the camera
         LatLng arequipa = new LatLng(-16.398796, -71.536942);
 
@@ -196,39 +243,43 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         LatLng l5 = new LatLng(-16.369861, -71.536464);
         LatLng l6 = new LatLng(-16.395491, -71.534335);
 
-
-
-        mMap.addMarker(new MarkerOptions()
+        mMarkers.add(new MarkerOptions()
                 .position(l1)
                 .title("Plaza de Armas")
                 .snippet("Historica plaza de armas de arequipa")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-        mMap.addMarker(new MarkerOptions()
+
+        mMarkers.add(new MarkerOptions()
                 .position(l2)
                 .title("Monasterio de Santa Catalina")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-        mMap.addMarker(new MarkerOptions()
+        mMarkers.add(new MarkerOptions()
                 .position(l3)
                 .title("Claustros de la compañia")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
 
-        mMap.addMarker(new MarkerOptions()
+        mMarkers.add(new MarkerOptions()
                 .position(l4)
                 .title("Mirador de Yanahuara")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
 
-        mMap.addMarker(new MarkerOptions()
+        mMarkers.add(new MarkerOptions()
                 .position(l5)
                 .title("Mirador de Carmen Alto")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
 
-        mMap.addMarker(new MarkerOptions()
+        mMarkers.add(new MarkerOptions()
                 .position(l6)
                 .title("Museo Historico")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
 
+        for (int i = 0; i < mMarkers.size(); i++) {
+            mMap.addMarker(mMarkers.get(i));
+        }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arequipa,15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arequipa, 15));
+        centerOnMyLocation();
+
     }
 
 
@@ -271,4 +322,124 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
+
+    private void centerOnMyLocation() {
+        Location location = getLastBestLocation();
+        if (location != null) {
+            LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            mMarkerMyLocation = new MarkerOptions()
+                    .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_lens));
+
+            mMap.clear();
+            for (int i = 0; i < mMarkers.size(); i++) {
+                mMap.addMarker(mMarkers.get(i));
+            }
+            mMap.addMarker(mMarkerMyLocation);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+
+            Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses;
+            try {
+                addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                if (addresses.size() > 0) {
+                    String cityName = addresses.get(0).getLocality();
+                    Toolbar tb = (Toolbar) getActivity().findViewById(R.id.toolbar);
+                    tb.setTitle(cityName);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Location getLastBestLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Log.e(TAG, "centerOnMyLocation: NO HAY PERMISOS!!");
+        }
+        Location locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        long GPSLocationTime = 0;
+        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+
+        long NetLocationTime = 0;
+
+        if (null != locationNet) {
+            NetLocationTime = locationNet.getTime();
+        }
+
+        if ( 0 < GPSLocationTime - NetLocationTime ) {
+            return locationGPS;
+        }
+        else {
+            return locationNet;
+        }
+    }
+
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+
+            LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            mMarkerMyLocation = new MarkerOptions()
+                    .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_lens));
+
+            mMap.clear();
+            for (int i = 0; i < mMarkers.size(); i++) {
+                mMap.addMarker(mMarkers.get(i));
+            }
+            mMap.addMarker(mMarkerMyLocation);
+
+            Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses;
+            try {
+                addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                if (addresses.size() > 0) {
+                    String cityName = addresses.get(0).getLocality();
+                    Toolbar tb = (Toolbar) getActivity().findViewById(R.id.toolbar);
+                    tb.setTitle(cityName);
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(TAG, "onStatusChanged: " );
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(TAG, "onProviderEnabled: ");
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            if (provider == getString(R.string.provider_gps)) {
+                Log.e(TAG, "onProviderDisabled: " + provider);
+
+                mMap.clear();
+                for (int i = 0; i < mMarkers.size(); i++) {
+                    mMap.addMarker(mMarkers.get(i));
+                }
+
+                /// TODO: CREAR MENSAJE DE ACTIVAR GPS
+            }
+        }
+    }
 }
