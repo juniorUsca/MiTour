@@ -1,11 +1,19 @@
 package com.debugcc.mitour.Fragments.main;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -96,20 +105,51 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         ArrayList<CategoryPlace> categoriesPlaces = new ArrayList<>();
 
         CategoryPlace c1 = new CategoryPlace();
-        c1.setImage(R.drawable.logo);
+        c1.setImage(R.drawable.ic_view_week);
         c1.setName("Todas");
 
         CategoryPlace c2 = new CategoryPlace();
-        c2.setImage(R.drawable.logo);
-        c2.setName("Comidas muchas");
+        c2.setImage(R.drawable.ic_home_vector);
+        c2.setName("Palacios y Casonas");
 
         CategoryPlace c3 = new CategoryPlace();
-        c3.setImage(R.drawable.logo);
-        c3.setName("Museos asd asd");
+        c3.setImage(R.drawable.ic_home_vector);
+        c3.setName("Iglesias y Conventos");
+
+        CategoryPlace c4 = new CategoryPlace();
+        c4.setImage(R.drawable.ic_home_vector);
+        c4.setName("Plazas, alamedas y parques");
+
+        CategoryPlace c5 = new CategoryPlace();
+        c5.setImage(R.drawable.ic_home_vector);
+        c5.setName("Museos y Galerias de Arte");
+
+        CategoryPlace c6 = new CategoryPlace();
+        c6.setImage(R.drawable.ic_home_vector);
+        c6.setName("Teatros");
+
+        CategoryPlace c7 = new CategoryPlace();
+        c7.setImage(R.drawable.ic_home_vector);
+        c7.setName("Centros Culturales");
+
+        CategoryPlace c8 = new CategoryPlace();
+        c8.setImage(R.drawable.ic_home_vector);
+        c8.setName("Hoteles");
+
+        CategoryPlace c9 = new CategoryPlace();
+        c9.setImage(R.drawable.ic_home_vector);
+        c9.setName("Restaurantes");
 
         categoriesPlaces.add(c1);
         categoriesPlaces.add(c2);
         categoriesPlaces.add(c3);
+        categoriesPlaces.add(c4);
+        categoriesPlaces.add(c5);
+        categoriesPlaces.add(c6);
+        categoriesPlaces.add(c7);
+        categoriesPlaces.add(c8);
+        categoriesPlaces.add(c9);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -119,6 +159,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(categoriesPlaces));
         recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
+
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        fab.hide();
 
     }
 
@@ -137,10 +187,51 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng arequipa = new LatLng(-16.398796, -71.536942);
+
+        LatLng l1 = new LatLng(-16.398796, -71.536942);
+        LatLng l2 = new LatLng(-16.395331, -71.536791);
+        LatLng l3 = new LatLng(-16.399825, -71.536548);
+        LatLng l4 = new LatLng(-16.387506, -71.541742);
+        LatLng l5 = new LatLng(-16.369861, -71.536464);
+        LatLng l6 = new LatLng(-16.395491, -71.534335);
+
+
+
+        mMap.addMarker(new MarkerOptions()
+                .position(l1)
+                .title("Plaza de Armas")
+                .snippet("Historica plaza de armas de arequipa")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+        mMap.addMarker(new MarkerOptions()
+                .position(l2)
+                .title("Monasterio de Santa Catalina")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+        mMap.addMarker(new MarkerOptions()
+                .position(l3)
+                .title("Claustros de la compañia")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(l4)
+                .title("Mirador de Yanahuara")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(l5)
+                .title("Mirador de Carmen Alto")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(l6)
+                .title("Museo Historico")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arequipa,15));
     }
+
+
 
     /*// TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

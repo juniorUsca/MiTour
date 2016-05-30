@@ -55,7 +55,7 @@ public class SplashActivity extends Activity {
             /// task in background
             // get categories of places
 
-            String URL_categoryplace = "https://script.google.com/macros/s/AKfycbxzVgdIhfVGuYZjwxiFokOCMDEvr1hCkIZ0PTdy51BpnKx6F18T/exec";
+            /*String URL_categoryplace = "https://script.google.com/macros/s/AKfycbxzVgdIhfVGuYZjwxiFokOCMDEvr1hCkIZ0PTdy51BpnKx6F18T/exec";
             RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
             JsonArrayRequest request = new JsonArrayRequest(URL_categoryplace, future, future);
@@ -76,11 +76,11 @@ public class SplashActivity extends Activity {
 
             } catch (ExecutionException e) {
                 Log.e("ERROR2", e.toString());
-            }
-
-            /*for (int i=0; i< 100000000; ++i){
-
             }*/
+
+            for (int i=0; i< 100000000; ++i){
+
+            }
 
             return null;
         }

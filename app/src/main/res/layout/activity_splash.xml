@@ -6,7 +6,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".Activities.SplashActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/color_light">
 
     <ImageView android:id="@+id/splashscreen"
         android:layout_width="wrap_content"
