@@ -1,26 +1,11 @@
 package com.debugcc.mitour.Activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
 import com.debugcc.mitour.R;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
 
 public class SplashActivity extends Activity {
 
@@ -89,7 +74,8 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             /// redirection!
-            Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+            //Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent mainIntent = new Intent(SplashActivity.this, PagerActivity.class);
 
             SplashActivity.this.startActivity(mainIntent);
             SplashActivity.this.finish();
