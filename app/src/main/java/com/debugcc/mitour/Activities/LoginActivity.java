@@ -3,6 +3,8 @@ package com.debugcc.mitour.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,11 +31,25 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.debugcc.mitour.Models.User;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.PrefUtils;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONObject;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -64,10 +81,81 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private String TAG = "LoginActivity";
+
+    private User mUser;
+    private ProgressDialog mProgressDialog;
+    private LoginButton mLoginFacebookButton;
+    private Button mLoginButton;
+    private CallbackManager mCallbackManager;
+    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            // App code
+
+            GraphRequest request = GraphRequest.newMeRequest(
+                    loginResult.getAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted (JSONObject object, GraphResponse response) {
+                            Log.e("response: ", response + "");
+                            mProgressDialog.dismiss();
+                            try {
+                                mUser = new User();
+                                mUser.facebookID = object.getString("id").toString();
+                                mUser.email = object.getString("email").toString();
+                                mUser.name = object.getString("name").toString();
+                                mUser.gender = object.getString("gender").toString();
+                                PrefUtils.setCurrentUser(mUser,LoginActivity.this);
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(LoginActivity.this,"welcome "+mUser.name,Toast.LENGTH_LONG).show();
+                            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                            startActivity(intent);
+
+                            LoginActivity.this.finish();
+                        }
+                    });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email,gender,birthday");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
+
+        @Override
+        public void onCancel() {
+            // App code
+            mProgressDialog.dismiss();
+            Log.e(TAG, "onCancel: " );
+        }
+
+        @Override
+        public void onError(FacebookException exception) {
+            // App code
+            mProgressDialog.dismiss();
+            Log.e(TAG, "onError: " + exception.toString() );
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /// facebook
+        FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_login);
+
+        AppEventsLogger.activateApp(this);
+
+        if (PrefUtils.getCurrentUser(LoginActivity.this) != null) {
+            Intent homeIntent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(homeIntent);
+            finish();
+        }
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -94,6 +182,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCallbackManager = CallbackManager.Factory.create();
+
+        /// facebook
+
+        mLoginFacebookButton = (LoginButton) findViewById(R.id.login_facebook_button);
+        if (mLoginFacebookButton != null) {
+            mLoginFacebookButton.setReadPermissions("public_profile", "email", "user_friends");
+        }
+
+        mLoginButton = (Button) findViewById(R.id.login_button);
+
+        mLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProgressDialog = new ProgressDialog(LoginActivity.this);
+                mProgressDialog.setMessage("Loading...");
+                mProgressDialog.show();
+
+                mLoginFacebookButton.performClick();
+                mLoginFacebookButton.setPressed(true);
+                mLoginFacebookButton.invalidate();
+                mLoginFacebookButton.registerCallback(mCallbackManager, mCallBack);
+                mLoginFacebookButton.setPressed(false);
+                mLoginFacebookButton.invalidate();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void populateAutoComplete() {
@@ -349,4 +476,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 }
+
 

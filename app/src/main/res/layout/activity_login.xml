@@ -72,6 +72,24 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_facebook_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:visibility="gone"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesion"
+                android:id="@+id/login_button"
+                android:background="@color/com_facebook_button_background_color"
+                android:textColor="@color/com_facebook_button_text_color"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

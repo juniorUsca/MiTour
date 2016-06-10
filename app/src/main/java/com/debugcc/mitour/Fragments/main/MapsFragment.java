@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.debugcc.mitour.Adapters.CategoryPlaceAdapter;
 import com.debugcc.mitour.Models.CategoryPlace;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.Route;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -233,6 +234,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mLocationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
 
+
+
+
         // Add a marker in Sydney and move the camera
         LatLng arequipa = new LatLng(-16.398796, -71.536942);
 
@@ -279,6 +283,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arequipa, 15));
         centerOnMyLocation();
+
+        Route mRoute = new Route();
+        mRoute.drawRoute(mMap,getContext(),l1,l6,true,"es");
 
     }
 
