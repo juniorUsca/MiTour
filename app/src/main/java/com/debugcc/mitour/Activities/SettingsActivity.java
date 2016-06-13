@@ -54,12 +54,20 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        mUser = PrefUtils.getCurrentUser(SettingsActivity.this);
 
         btnLogout = (Button) findViewById(R.id.logout_button);
+        if (mUser != null) {
+            if (mUser.server.equals(User.FACEBOOK_SERVER))
+                btnLogout.setBackgroundColor( getResources().getColor(R.color.com_facebook_button_background_color) );
+            if (mUser.server.equals(User.GOOGLE_SERVER))
+                btnLogout.setBackgroundColor( getResources().getColor(R.color.red) );
+        }
+
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUser = PrefUtils.getCurrentUser(SettingsActivity.this);
+
                 PrefUtils.clearCurrentUser(SettingsActivity.this);
 
                 Log.e(TAG, "onClick: " + mUser.server);
