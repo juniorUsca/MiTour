@@ -285,7 +285,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         centerOnMyLocation();
 
         Route mRoute = new Route();
-        mRoute.drawRoute(mMap,getContext(),l1,l6,true,"es");
+        mRoute.drawRoute(mMap,getContext(),l1,l6,"walking",true,"es");
 
     }
 

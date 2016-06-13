@@ -10,14 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Activities.LoginActivity">
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+
 
     <ScrollView
         android:id="@+id/login_form"
@@ -28,66 +21,41 @@
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_facebook_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:visibility="gone"
-                />
+                android:visibility="gone"/>
 
             <Button
+                android:id="@+id/login_buttonfa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Iniciar sesion"
-                android:id="@+id/login_button"
+                android:text="Iniciar sesion con Facebook"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
                 android:background="@color/com_facebook_button_background_color"
+                android:textColor="@color/com_facebook_button_text_color"/>
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/login_google_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/login_buttongo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesion con Google"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/red"
                 android:textColor="@color/com_facebook_button_text_color"/>
 
         </LinearLayout>

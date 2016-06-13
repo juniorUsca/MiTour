@@ -118,11 +118,10 @@ public class Route {
     {
         mMap = map;
         context = c;
+        lang = language;
 
         String url = makeURL(source.latitude,source.longitude,dest.latitude,dest.longitude,"driving");
         new connectAsyncTask(url,withIndications).execute();
-        lang = language;
-
     }
 
 
@@ -130,11 +129,10 @@ public class Route {
     {
         mMap = map;
         context = c;
+        lang = language;
 
         String url = makeURL(source.latitude,source.longitude,dest.latitude,dest.longitude,"driving");
         new connectAsyncTask(url,false).execute();
-        lang = language;
-
     }
 
 
@@ -142,11 +140,10 @@ public class Route {
     {
         mMap = map;
         context = c;
+        lang = language;
 
         String url = makeURL(source.latitude,source.longitude,dest.latitude,dest.longitude,mode);
         new connectAsyncTask(url,withIndications).execute();
-        lang = language;
-
     }
 
     private String makeURL (ArrayList<LatLng> points, String mode, boolean optimize){

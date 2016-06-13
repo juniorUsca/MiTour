@@ -142,15 +142,19 @@ public class PagerActivity extends AppCompatActivity {
         mSkipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                page = 2;
-                mViewPager.setCurrentItem(page, true);
+                //page = 2;
+                //mViewPager.setCurrentItem(page, true);
+
+                Intent mainIntent = new Intent(PagerActivity.this, LoginActivity.class);
+
+                PagerActivity.this.startActivity(mainIntent);
+                PagerActivity.this.finish();
             }
         });
 
         mFinishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                finish();
                 //  update 1st time pref
                 //Utils.saveSharedSetting(PagerActivity.this, MainActivity.PREF_USER_FIRST_TIME, "false");
 
