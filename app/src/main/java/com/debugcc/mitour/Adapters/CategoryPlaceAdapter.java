@@ -36,7 +36,8 @@ public class CategoryPlaceAdapter extends RecyclerView.Adapter<CategoryPlaceAdap
     @Override
     public void onBindViewHolder(CategoryPlaceAdapter.ViewHolder holder, int position) {
         CategoryPlace item = mDataset.get(position);
-        holder.mImage.setImageResource(item.getImage());
+        //holder.mImage.setImageResource(item.getImage());
+        holder.mImage.setImageBitmap(item.getImage());
         holder.mName.setText(item.getName());
     }
 
@@ -53,7 +54,7 @@ public class CategoryPlaceAdapter extends RecyclerView.Adapter<CategoryPlaceAdap
             super(itemView);
 
             mImage = (ImageView) itemView.findViewById(R.id.categoryPlace_image);
-            mName= (TextView) itemView.findViewById(R.id.categoryPlace_name);
+            mName  = (TextView)  itemView.findViewById(R.id.categoryPlace_name);
         }
     }
 }

@@ -5,20 +5,43 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 
+import com.debugcc.mitour.Models.User;
 import com.debugcc.mitour.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by dubgcc on 05/06/16.
  */
 public class Utils {
-    private static final String PREFERENCES_FILE = "materialsample_settings";
+    private static final String TAG = "Utils";
+
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+
+    private static final String PREFERENCES_FILE = "MiTour_settings";
+
+    public static final String PREF_FIRST_SYNC = "Pref_First_Sync";
+    public static final String PREF_USER_FIRST_TIME = "Pref_User_First_Time";
+
+
+
 
 
     public static int getToolbarHeight(Context context) {
@@ -53,8 +76,23 @@ public class Utils {
     }
 
 
-    /// PROFILE
+    public static <T> T readSharedList(Context ctx, String settingName, Class<T> cls) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+        String jsonItems = sharedPref.getString(settingName, null);
+        Gson gson = new Gson();
+        return gson.fromJson(jsonItems, cls);
+    }
 
+    public static void saveSharedList(Context ctx, String settingName, ArrayList items) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+        editor.putString(settingName, gson.toJson(items.toArray()));
+        editor.apply();
+    }
+
+
+    /// PROFILE
 
     public static Bitmap getProfilePicture(String url){
         Bitmap bitmap = null;
@@ -68,4 +106,64 @@ public class Utils {
         }
         return bitmap;
     }
+
+    /**
+     * Function to download images on ASYNC
+     *
+     * Long replace is a timestamp to know if we need reemplace the image
+     */
+    public static void putPicture(Context ctx, String name, String url, Long replace){
+        Bitmap bitmap = null;
+
+        String path = ctx.getFilesDir().getAbsolutePath() + "/" + name;
+        File file = new File (path);
+        //if (!file.exists()) {
+        Log.d(TAG, "putPicture: REPLACE " + replace );
+        Log.d(TAG, "putPicture: LAST MODIFIED " + file.lastModified() );
+        if (replace > file.lastModified()) {
+            try {
+                Log.d(TAG, "getPicture: " + name + " " + url);
+                URL imageURL = new URL(url);
+                bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+
+                FileOutputStream outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+                outputStream.close();
+                //file.setLastModified(replace);
+                Log.d(TAG, "putPicture: NEW LAST MODIFIED " + file.lastModified() );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static Bitmap getPicture(Context ctx, String name, Drawable drw_default){
+        Bitmap bitmap = null;
+
+        String path = ctx.getFilesDir().getAbsolutePath() + "/" + name;
+        File file = new File (path);
+        if (!file.exists()) {
+            //bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_home_vector);
+            bitmap = ((BitmapDrawable) drw_default).getBitmap();
+        } else {
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+        return bitmap;
+        // (Drawable) return new BitmapDrawable(bitmap);
+    }
+
+    public static Bitmap getPicture(Context ctx, String name, Bitmap bm_default){
+        Bitmap bitmap = null;
+
+        String path = ctx.getFilesDir().getAbsolutePath() + "/" + name;
+        File file = new File (path);
+        if (!file.exists()) {
+            bitmap = bm_default;
+        } else {
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+        return bitmap;
+        // (Drawable) return new BitmapDrawable(bitmap);
+    }
+
 }

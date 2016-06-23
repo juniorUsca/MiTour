@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E91E63</color>
-    <color name="colorPrimaryDark">#C2185B</color>
-    <color name="colorAccent">#FF9800</color>
+    <color name="colorPrimary">#8BC34A</color>
+    <color name="colorPrimaryDark">#689F38</color>
+    <color name="colorAccent">#4CAF50</color>
 
     <color name="color_light">#ffffff</color>
     <color name="colorPrimaryLight">#F8BBD0</color>
@@ -22,6 +22,7 @@
     <!--Pink 700-->
     <color name="accent_700">#C2185B</color>
     <color name="black_trans80">#14000000</color>
+    <color name="transparent">#00000000</color>
 
     <color name="indicator_unselected">#4D000000</color>
 
@@ -43,4 +44,8 @@
     <color name="amber">#FFC107</color>
     <color name="orange">#FF9800</color>
     <color name="deep_orange">#FF5722</color>
+
+    <color name="cyan_tr">#0090B0</color>
+    <color name="orange_tr">#D08000</color>
+    <color name="green_tr">#309040</color>
 </resources>

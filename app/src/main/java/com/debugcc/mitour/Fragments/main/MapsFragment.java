@@ -3,6 +3,7 @@ package com.debugcc.mitour.Fragments.main;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
@@ -20,6 +21,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,12 +29,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.debugcc.mitour.Adapters.CategoryPlaceAdapter;
 import com.debugcc.mitour.Models.CategoryPlace;
 import com.debugcc.mitour.R;
 import com.debugcc.mitour.utils.Route;
+import com.debugcc.mitour.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -136,7 +140,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         /// Charge categories
         ArrayList<CategoryPlace> categoriesPlaces = new ArrayList<>();
 
-        CategoryPlace c1 = new CategoryPlace();
+        /*CategoryPlace c1 = new CategoryPlace();
         c1.setImage(R.drawable.ic_view_week);
         c1.setName("Todas");
 
@@ -180,7 +184,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         categoriesPlaces.add(c6);
         categoriesPlaces.add(c7);
         categoriesPlaces.add(c8);
-        categoriesPlaces.add(c9);
+        categoriesPlaces.add(c9);*/
+
+        CategoryPlace[] categoriesPl = Utils.readSharedList(getActivity(), "categories", CategoryPlace[].class);
+        for (CategoryPlace cp : categoriesPl) {
+
+            Bitmap bm = Utils.getPicture(
+                    getActivity(),
+                    cp.getName(),
+                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_vector) );
+
+            cp.setImage(bm);
+
+            categoriesPlaces.add(cp);
+        }
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -251,7 +268,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 .position(l1)
                 .title("Plaza de Armas")
                 .snippet("Historica plaza de armas de arequipa")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
         mMarkers.add(new MarkerOptions()
                 .position(l2)
@@ -285,7 +302,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         centerOnMyLocation();
 
         Route mRoute = new Route();
-        mRoute.drawRoute(mMap,getContext(),l1,l6,"walking",true,"es");
+        mRoute.drawRoute(mMap,getContext(),l1,l6,"driving",true,"es");
 
     }
 
@@ -339,6 +356,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     .position(latlng)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_lens));
 
+            Log.e(TAG, "centerOnMyLocation: CENTRANDO Y BORRANDO" );
+
             mMap.clear();
             for (int i = 0; i < mMarkers.size(); i++) {
                 mMap.addMarker(mMarkers.get(i));
@@ -346,10 +365,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMap.addMarker(mMarkerMyLocation);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
 
+            Log.e(TAG, "centerOnMyLocation: CENTRADo" );
             Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+            Log.e(TAG, "centerOnMyLocation: GEOCODER" );
             List<Address> addresses;
             try {
+                Log.e(TAG, "centerOnMyLocation: " + "addressing BEGIN" );
                 addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                Log.e(TAG, "centerOnMyLocation: " + "addressing END" );
                 if (addresses.size() > 0) {
                     String cityName = addresses.get(0).getLocality();
                     Toolbar tb = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -372,7 +395,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             Log.e(TAG, "centerOnMyLocation: NO HAY PERMISOS!!");
         }
+        Log.e(TAG, "getting GPS PROVIDER");
         Location locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Log.e(TAG, "getting NETWORK PROVIDER");
         Location locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         long GPSLocationTime = 0;
@@ -402,13 +427,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMarkerMyLocation = new MarkerOptions()
                     .position(latlng)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_lens));
-
+            Log.e(TAG, "onLocationChanged: LOCATION CHANGED" );
             mMap.clear();
             for (int i = 0; i < mMarkers.size(); i++) {
                 mMap.addMarker(mMarkers.get(i));
             }
             mMap.addMarker(mMarkerMyLocation);
-
+//TODO: error NULL
+            /*
             Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses;
             try {
@@ -421,7 +447,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
             catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
 
         }
 

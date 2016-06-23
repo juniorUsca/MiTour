@@ -20,9 +20,11 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:scrollbars="horizontal"
         android:id="@+id/recycler_categoriesPlaces"
-        android:background="@color/colorAccent">
+        android:background="@color/colorPrimary">
     </android.support.v7.widget.RecyclerView>
 
     <fragment

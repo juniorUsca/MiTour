@@ -43,7 +43,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".Activities.SplashActivity">
+        <activity
+            android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,12 +52,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Activities.PagerActivity"
+            android:label="@string/title_activity_on_boarding"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="true"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -67,10 +71,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.PagerActivity"
-            android:label="@string/title_activity_on_boarding"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".Activities.SettingsActivity" />
     </application>
 

@@ -2,10 +2,13 @@ package com.debugcc.mitour.Activities;
 
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -13,16 +16,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.PrefUtils;
 import com.debugcc.mitour.utils.Utils;
 
 public class PagerActivity extends AppCompatActivity {
@@ -49,14 +56,21 @@ public class PagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pager);
+        //setContentView(R.layout.activity_pager);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Utils.readSharedSetting(this, Utils.PREF_USER_FIRST_TIME, Utils.TRUE).equals(Utils.FALSE)) {
+            Intent homeIntent = new Intent(PagerActivity.this, LoginActivity.class);
+            startActivity(homeIntent);
+            finish();
+        }
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black_trans80));
-        }
+        }*/
 
         setContentView(R.layout.activity_pager);
 
@@ -94,7 +108,12 @@ public class PagerActivity extends AppCompatActivity {
         final int color2 = ContextCompat.getColor(this, R.color.orange);
         final int color3 = ContextCompat.getColor(this, R.color.green);
 
+        final int color1_tr = ContextCompat.getColor(this, R.color.cyan_tr);
+        final int color2_tr = ContextCompat.getColor(this, R.color.orange_tr);
+        final int color3_tr = ContextCompat.getColor(this, R.color.green_tr);
+
         final int[] colorList = new int[]{color1, color2, color3};
+        final int[] colorListTr = new int[]{color1_tr, color2_tr, color3_tr};
 
         final ArgbEvaluator evaluator = new ArgbEvaluator();
 
@@ -106,6 +125,10 @@ public class PagerActivity extends AppCompatActivity {
                 */
                 int colorUpdate = (Integer) evaluator.evaluate(positionOffset, colorList[position], colorList[position == 2 ? position : position + 1]);
                 mViewPager.setBackgroundColor(colorUpdate);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    int colorUpdateTr = (Integer) evaluator.evaluate(positionOffset, colorListTr[position], colorListTr[position == 2 ? position : position + 1]);
+                    getWindow().setStatusBarColor(colorUpdateTr);
+                }
             }
 
             @Override
@@ -115,12 +138,18 @@ public class PagerActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         mViewPager.setBackgroundColor(color1);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            getWindow().setStatusBarColor(color1_tr);
                         break;
                     case 1:
                         mViewPager.setBackgroundColor(color2);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            getWindow().setStatusBarColor(color2_tr);
                         break;
                     case 2:
                         mViewPager.setBackgroundColor(color3);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            getWindow().setStatusBarColor(color3_tr);
                         break;
                 }
                 mNextBtn.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
@@ -142,9 +171,6 @@ public class PagerActivity extends AppCompatActivity {
         mSkipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //page = 2;
-                //mViewPager.setCurrentItem(page, true);
-
                 Intent mainIntent = new Intent(PagerActivity.this, LoginActivity.class);
 
                 PagerActivity.this.startActivity(mainIntent);
@@ -156,8 +182,7 @@ public class PagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //  update 1st time pref
-                //Utils.saveSharedSetting(PagerActivity.this, MainActivity.PREF_USER_FIRST_TIME, "false");
-
+                Utils.saveSharedSetting(PagerActivity.this, Utils.PREF_USER_FIRST_TIME, Utils.FALSE);
                 Intent mainIntent = new Intent(PagerActivity.this, LoginActivity.class);
 
                 PagerActivity.this.startActivity(mainIntent);

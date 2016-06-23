@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pager_main_content"
-    android:layout_width="match_parent"
-    android:background="@color/colorAccent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activities.PagerActivity">>
+    android:background="@color/colorAccent"
+    tools:context=".Activities.PagerActivity">
 
 
     <android.support.v4.view.ViewPager

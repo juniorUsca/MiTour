@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "438439636227",
+    "firebase_url": "https://mi-tour.firebaseio.com",
+    "project_id": "mi-tour",
+    "storage_bucket": "mi-tour.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438439636227:android:d0ad4236a6a2acc8",
+        "android_client_info": {
+          "package_name": "com.debugcc.mitour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438439636227-qe8mimrs3lc03hj4vul9p4vj07macn4m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.debugcc.mitour",
+            "certificate_hash": "12064E98D7F319A1115C6DE6A89DDBD611AD9812"
+          }
+        },
+        {
+          "client_id": "438439636227-p28kf1n1uvnmg3a6petqamsrj8d1k4fv.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "438439636227-aiqs6jjfdjkpjgbugbdo38mkcm799n42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4qizF8CyJwe5nug8lerFdAiSmGZIjCnY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438439636227-p28kf1n1uvnmg3a6petqamsrj8d1k4fv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
