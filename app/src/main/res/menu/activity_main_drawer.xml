@@ -6,7 +6,7 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_vector"
             android:title="@string/text_home" />
-        <item
+        <!--<item
             android:id="@+id/nav_memories"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/text_memories" />
@@ -25,28 +25,28 @@
         <item
             android:id="@+id/nav_trips"
             android:icon="@drawable/ic_map_vector"
-            android:title="@string/text_myTrips" />
+            android:title="@string/text_myTrips" />-->
     </group>
 
 
     <item android:title="Extras">
         <menu>
-            <item
+            <!--<item
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Aplicaciones Recomendadas" />
+                android:title="Aplicaciones Recomendadas" />-->
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_setting_light"
                 android:title="Configuraciones" />
-            <item
+            <!--<item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Send" />-->
         </menu>
     </item>
 

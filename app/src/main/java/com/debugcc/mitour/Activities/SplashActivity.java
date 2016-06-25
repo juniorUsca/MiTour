@@ -59,7 +59,9 @@ public class SplashActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }*/
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 

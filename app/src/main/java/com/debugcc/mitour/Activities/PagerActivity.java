@@ -212,6 +212,12 @@ public class PagerActivity extends AppCompatActivity {
         ImageView img;
 
         int[] bgs = new int[]{R.drawable.ic_flight_vector, R.drawable.ic_explore_vector, R.drawable.ic_map_vector};
+        String[] titles = new String[]{"Bienvenido a Mi Tour", "Recorre con nosotros", "Aun hay más!!"};
+        String[] subtitles = new String[]{
+                "Viaja a la bella ciudad de Arequipa y conoce nuevos lugares",
+                "Te ofrecemos sugerencias a las principales atracciones turisticas de la ciudad",
+                "Conoce pronto nuestro Perú"
+        };
 
         public PlaceholderFragment() {
         }
@@ -234,7 +240,10 @@ public class PagerActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_pager, container, false);
 
             TextView textView = (TextView) rootView.findViewById(R.id.pager_section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText(titles[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+
+            TextView textView_ds = (TextView) rootView.findViewById(R.id.pager_section_description);
+            textView_ds.setText(subtitles[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
             img = (ImageView) rootView.findViewById(R.id.pager_section_img);
             img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);

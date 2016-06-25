@@ -111,12 +111,12 @@ public class MainActivity extends AppCompatActivity
             genericFragment = MapsFragment.newInstance("hola1","hola2");
             //fab_main.setImageResource(R.drawable.ic_my_location_vector);
             //fab_main.show();
-        } else if (id == R.id.nav_map) {
+        /*} else if (id == R.id.nav_map) {
 
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+*/
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         }

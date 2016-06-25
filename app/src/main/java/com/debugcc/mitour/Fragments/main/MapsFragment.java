@@ -46,6 +46,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -54,7 +55,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, CategoryPlaceAdapter.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,12 +74,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager mLocationManager;
 
     private ArrayList<MarkerOptions> mMarkers;
+    private ArrayList<MarkerOptions> mMarkersShow;
+    private ArrayList<PolylineOptions> mPolylines;
+
     private LatLng center;
     private ArrayList<LatLng> mLatLngs;
     private MarkerOptions mMarkerMyLocation;
 
     private ArrayList<CategoryPlace> mCategoriesPlaces;
-    private ArrayList mMarkersModel;
+    private ArrayList<Marker> mMarkersModel;
 
     public MapsFragment() {}
 
@@ -158,11 +162,58 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         RecyclerView recyclerView_categoriesPlaces = (RecyclerView) this.getActivity().findViewById(R.id.recycler_categoriesPlaces);
         recyclerView_categoriesPlaces.setHasFixedSize(true);
-        recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(mCategoriesPlaces));
+        recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(mCategoriesPlaces, this));
         recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
+    }
+
+    @Override
+    public void onItemClick(CategoryPlace item) {
+        mMarkersShow.clear();
+
+        if (mCategoriesPlaces.get(0).getID().equals(
+                item.getID() ))
+        {
+            for (int i = 0; i < mMarkers.size(); i++) {
+                mMarkersShow.add( mMarkers.get(i) );
+            }
+        } else {
+            for (int i = 0; i < mMarkersModel.size(); i++) {
+                Marker m = mMarkersModel.get(i);
+
+                int flag_belongs = -1;
+                for (int j = 0; j < m.getCategories().size(); j++) {
+                    if ( m.getCategories().get(j).equals(item.getID()) ) {
+                        flag_belongs = j;
+                    }
+                }
+                if (flag_belongs >= 0) {
+                    MarkerOptions tmp = mMarkers.get(i).icon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                    Bitmap.createScaledBitmap(item.getImage(), 42, 42, false)
+                            )
+                    );
+                    mMarkersShow.add( tmp );
+                }
 
 
+            }
+        }
+
+        fillMap();
+    }
+
+    public void fillMap() {
+        mMap.clear();
+        for (int i = 0; i < mMarkersShow.size(); i++) {
+            mMap.addMarker(mMarkersShow.get(i));
+        }
+
+        if (mPolylines != null) {
+            for (int i = 0; i < mPolylines.size(); i++) {
+                mMap.addPolyline(mPolylines.get(i));
+            }
+        }
     }
 
 
@@ -189,6 +240,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         /// Adding markers
         mMarkers = new ArrayList<>();
+        mMarkersShow = new ArrayList<>();
         mLatLngs = new ArrayList<>();
 
         Marker[] markers_array = Utils.readSharedList(getActivity(), Utils.FIRE_DB_MARKERS, Marker[].class);
@@ -206,27 +258,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             CategoryPlace ctP = mCategoriesPlaces.get(
                     CategoryPlace.findByID (mCategoriesPlaces, item.getCategories().get(0))
             );
-            mMarkers.add(new MarkerOptions()
+            MarkerOptions markerOption = new MarkerOptions()
                     .position(ll)
                     .title(item.getName())
                     .snippet(item.getDetails())
                     .icon( BitmapDescriptorFactory.fromBitmap(
                             Bitmap.createScaledBitmap(ctP.getImage(), 42, 42, false)
-                    ) )
-            );
+                    ) );
+            mMarkers.add(markerOption);
+            mMarkersShow.add(markerOption);
             //BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         }
 
-        for (int i = 0; i < mMarkers.size(); i++) {
-            mMap.addMarker(mMarkers.get(i));
-        }
+        fillMap();
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 center
                 , 15));
 
         /// Adding Route
-
         Route mRoute = new Route();
         mRoute.drawRoute(mMap,
                 getContext(),
@@ -235,6 +285,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 false,
                 Route.LANGUAGE_SPANISH,
                 true);
+
+        mPolylines = mRoute.mPolylines;
 
 
         fab_myposition.setOnClickListener(new View.OnClickListener() {

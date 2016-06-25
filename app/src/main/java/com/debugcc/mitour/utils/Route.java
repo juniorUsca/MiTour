@@ -31,7 +31,7 @@ public class Route {
     GoogleMap mMap;
     Context context;
     String lang;
-    ArrayList<PolylineOptions> mPolylines = new ArrayList<>();
+    public ArrayList<PolylineOptions> mPolylines = new ArrayList<>();
 
 
     public static final String LANGUAGE_SPANISH = "es";
@@ -300,6 +300,7 @@ public class Route {
                         .color(ContextCompat.getColor(context, R.color.pink))
                         .geodesic(true);
                 mMap.addPolyline(plineopt);
+                mPolylines.add(plineopt);
                 //Polyline line = mMap.addPolyline(plineopt);
             }
 
