@@ -93,4 +93,12 @@ public class CategoryPlace {
     public void setID(String ID) {
         this.ID = ID;
     }
+
+    @Exclude
+    public static int findByID(ArrayList<CategoryPlace> cps, String ID) {
+        for (int i = 0; i < cps.size(); i++)
+            if ( cps.get(i).getID().equals(ID) )
+                return i;
+        return -1;
+    }
 }

@@ -42,12 +42,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,9 +77,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<LatLng> mLatLngs;
     private MarkerOptions mMarkerMyLocation;
 
-    public MapsFragment() {
-        // Required empty public constructor
-    }
+    private ArrayList<CategoryPlace> mCategoriesPlaces;
+    private ArrayList mMarkersModel;
+
+    public MapsFragment() {}
 
     /**
      * Use this factory method to create a new instance of
@@ -133,7 +137,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
 
         /// Charge categories
-        ArrayList<CategoryPlace> categoriesPlaces = new ArrayList<>();
+        mCategoriesPlaces = new ArrayList<>();
 
         CategoryPlace[] categoriesPl = Utils.readSharedList(getActivity(), Utils.FIRE_DB_CATEGORIES, CategoryPlace[].class);
         for (CategoryPlace cp : categoriesPl) {
@@ -145,7 +149,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
             cp.setImage(bm);
 
-            categoriesPlaces.add(cp);
+            mCategoriesPlaces.add(cp);
         }
 
 
@@ -154,7 +158,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         RecyclerView recyclerView_categoriesPlaces = (RecyclerView) this.getActivity().findViewById(R.id.recycler_categoriesPlaces);
         recyclerView_categoriesPlaces.setHasFixedSize(true);
-        recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(categoriesPlaces));
+        recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(mCategoriesPlaces));
         recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
 
@@ -174,6 +178,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
 
         mLocationManager = (LocationManager)
                 getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -187,15 +196,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 Double.parseDouble(markers_array[0].getLat()),
                 Double.parseDouble(markers_array[0].getLng())
         );
+        mMarkersModel = new ArrayList<>(Arrays.asList(markers_array));
+
         for (Marker item : markers_array) {
 
             LatLng ll = new LatLng(Double.parseDouble(item.getLat()), Double.parseDouble(item.getLng()));
             mLatLngs.add(ll);
+
+            CategoryPlace ctP = mCategoriesPlaces.get(
+                    CategoryPlace.findByID (mCategoriesPlaces, item.getCategories().get(0))
+            );
             mMarkers.add(new MarkerOptions()
                     .position(ll)
                     .title(item.getName())
                     .snippet(item.getDetails())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    .icon( BitmapDescriptorFactory.fromBitmap(
+                            Bitmap.createScaledBitmap(ctP.getImage(), 42, 42, false)
+                    ) )
+            );
+            //BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         }
 
         for (int i = 0; i < mMarkers.size(); i++) {
@@ -206,6 +225,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 center
                 , 15));
 
+        /// Adding Route
 
         Route mRoute = new Route();
         mRoute.drawRoute(mMap,
@@ -241,10 +261,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
         //centerOnMyLocation();
-
-        //Route mRoute = new Route();
-        //mRoute.drawRoute(mMap,getContext(),l1,l6,"driving",true,"es");
-
     }
 
 

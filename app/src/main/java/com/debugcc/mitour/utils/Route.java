@@ -157,27 +157,21 @@ public class Route {
 
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
-        //urlString.append( points.get(0).latitude);
-        urlString.append( points.get(1).latitude);
+        urlString.append( points.get(0).latitude);
         urlString.append(',');
-        //urlString.append(points.get(0).longitude);
-        urlString.append(points.get(1).longitude);
+        urlString.append(points.get(0).longitude);
         urlString.append("&destination=");
         //urlString.append(points.get(points.size()-1).latitude);
-        urlString.append(points.get(2).latitude);
+        urlString.append(points.get(1).latitude);
         urlString.append(',');
         //urlString.append(points.get(points.size()-1).longitude);
-        urlString.append(points.get(2).longitude);
+        urlString.append(points.get(1).longitude);
 
         urlString.append("&waypoints=");
         if(optimize)
             urlString.append("optimize:true|");
 
-        urlString.append( points.get(0).latitude);
-        urlString.append(',');
-        urlString.append(points.get(0).longitude);
-
-        for(int i=3;i<points.size();i++)
+        for(int i=2;i<points.size();i++)
         {
             urlString.append('|');
             urlString.append( points.get(i).latitude);
@@ -202,11 +196,9 @@ public class Route {
         urlString.append("?origin=");// from
         urlString.append(Double.toString(sourcelat));
         urlString.append(",");
-        urlString
-                .append(Double.toString( sourcelog));
+        urlString.append(Double.toString( sourcelog));
         urlString.append("&destination=");// to
-        urlString
-                .append(Double.toString( destlat));
+        urlString.append(Double.toString( destlat));
         urlString.append(",");
         urlString.append(Double.toString( destlog));
         urlString.append("&sensor=false&mode="+mode+"&alternatives=true&language="+lang);
