@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.debugcc.mitour.Adapters.CategoryPlaceAdapter;
 import com.debugcc.mitour.Models.CategoryPlace;
+import com.debugcc.mitour.Models.Marker;
 import com.debugcc.mitour.R;
 import com.debugcc.mitour.utils.Route;
 import com.debugcc.mitour.utils.Utils;
@@ -50,14 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MapsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,6 +70,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager mLocationManager;
 
     private ArrayList<MarkerOptions> mMarkers;
+    private LatLng center;
+    private ArrayList<LatLng> mLatLngs;
     private MarkerOptions mMarkerMyLocation;
 
     public MapsFragment() {
@@ -140,53 +135,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         /// Charge categories
         ArrayList<CategoryPlace> categoriesPlaces = new ArrayList<>();
 
-        /*CategoryPlace c1 = new CategoryPlace();
-        c1.setImage(R.drawable.ic_view_week);
-        c1.setName("Todas");
-
-        CategoryPlace c2 = new CategoryPlace();
-        c2.setImage(R.drawable.ic_home_vector);
-        c2.setName("Palacios y Casonas");
-
-        CategoryPlace c3 = new CategoryPlace();
-        c3.setImage(R.drawable.ic_home_vector);
-        c3.setName("Iglesias y Conventos");
-
-        CategoryPlace c4 = new CategoryPlace();
-        c4.setImage(R.drawable.ic_home_vector);
-        c4.setName("Plazas, alamedas y parques");
-
-        CategoryPlace c5 = new CategoryPlace();
-        c5.setImage(R.drawable.ic_home_vector);
-        c5.setName("Museos y Galerias de Arte");
-
-        CategoryPlace c6 = new CategoryPlace();
-        c6.setImage(R.drawable.ic_home_vector);
-        c6.setName("Teatros");
-
-        CategoryPlace c7 = new CategoryPlace();
-        c7.setImage(R.drawable.ic_home_vector);
-        c7.setName("Centros Culturales");
-
-        CategoryPlace c8 = new CategoryPlace();
-        c8.setImage(R.drawable.ic_home_vector);
-        c8.setName("Hoteles");
-
-        CategoryPlace c9 = new CategoryPlace();
-        c9.setImage(R.drawable.ic_home_vector);
-        c9.setName("Restaurantes");
-
-        categoriesPlaces.add(c1);
-        categoriesPlaces.add(c2);
-        categoriesPlaces.add(c3);
-        categoriesPlaces.add(c4);
-        categoriesPlaces.add(c5);
-        categoriesPlaces.add(c6);
-        categoriesPlaces.add(c7);
-        categoriesPlaces.add(c8);
-        categoriesPlaces.add(c9);*/
-
-        CategoryPlace[] categoriesPl = Utils.readSharedList(getActivity(), "categories", CategoryPlace[].class);
+        CategoryPlace[] categoriesPl = Utils.readSharedList(getActivity(), Utils.FIRE_DB_CATEGORIES, CategoryPlace[].class);
         for (CategoryPlace cp : categoriesPl) {
 
             Bitmap bm = Utils.getPicture(
@@ -209,6 +158,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
 
+
     }
 
 
@@ -227,7 +177,45 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         mLocationManager = (LocationManager)
                 getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        /// Adding markers
         mMarkers = new ArrayList<>();
+        mLatLngs = new ArrayList<>();
+
+        Marker[] markers_array = Utils.readSharedList(getActivity(), Utils.FIRE_DB_MARKERS, Marker[].class);
+        center = new LatLng(
+                Double.parseDouble(markers_array[0].getLat()),
+                Double.parseDouble(markers_array[0].getLng())
+        );
+        for (Marker item : markers_array) {
+
+            LatLng ll = new LatLng(Double.parseDouble(item.getLat()), Double.parseDouble(item.getLng()));
+            mLatLngs.add(ll);
+            mMarkers.add(new MarkerOptions()
+                    .position(ll)
+                    .title(item.getName())
+                    .snippet(item.getDetails())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
+
+        for (int i = 0; i < mMarkers.size(); i++) {
+            mMap.addMarker(mMarkers.get(i));
+        }
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                center
+                , 15));
+
+
+        Route mRoute = new Route();
+        mRoute.drawRoute(mMap,
+                getContext(),
+                mLatLngs,
+                Route.TRANSPORT_WALKING,
+                false,
+                Route.LANGUAGE_SPANISH,
+                true);
+
 
         fab_myposition.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,57 +240,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
 
 
+        //centerOnMyLocation();
 
-
-        // Add a marker in Sydney and move the camera
-        LatLng arequipa = new LatLng(-16.398796, -71.536942);
-
-        LatLng l1 = new LatLng(-16.398796, -71.536942);
-        LatLng l2 = new LatLng(-16.395331, -71.536791);
-        LatLng l3 = new LatLng(-16.399825, -71.536548);
-        LatLng l4 = new LatLng(-16.387506, -71.541742);
-        LatLng l5 = new LatLng(-16.369861, -71.536464);
-        LatLng l6 = new LatLng(-16.395491, -71.534335);
-
-        mMarkers.add(new MarkerOptions()
-                .position(l1)
-                .title("Plaza de Armas")
-                .snippet("Historica plaza de armas de arequipa")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
-        mMarkers.add(new MarkerOptions()
-                .position(l2)
-                .title("Monasterio de Santa Catalina")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-        mMarkers.add(new MarkerOptions()
-                .position(l3)
-                .title("Claustros de la compañia")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-
-        mMarkers.add(new MarkerOptions()
-                .position(l4)
-                .title("Mirador de Yanahuara")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-
-        mMarkers.add(new MarkerOptions()
-                .position(l5)
-                .title("Mirador de Carmen Alto")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-
-        mMarkers.add(new MarkerOptions()
-                .position(l6)
-                .title("Museo Historico")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_blue_dark)));
-
-        for (int i = 0; i < mMarkers.size(); i++) {
-            mMap.addMarker(mMarkers.get(i));
-        }
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arequipa, 15));
-        centerOnMyLocation();
-
-        Route mRoute = new Route();
-        mRoute.drawRoute(mMap,getContext(),l1,l6,"driving",true,"es");
+        //Route mRoute = new Route();
+        //mRoute.drawRoute(mMap,getContext(),l1,l6,"driving",true,"es");
 
     }
 
@@ -358,11 +299,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
             Log.e(TAG, "centerOnMyLocation: CENTRANDO Y BORRANDO" );
 
-            mMap.clear();
+            /*mMap.clear();
             for (int i = 0; i < mMarkers.size(); i++) {
                 mMap.addMarker(mMarkers.get(i));
             }
-            mMap.addMarker(mMarkerMyLocation);
+            mMap.addMarker(mMarkerMyLocation);*/
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
 
             Log.e(TAG, "centerOnMyLocation: CENTRADo" );
@@ -428,11 +369,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     .position(latlng)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_lens));
             Log.e(TAG, "onLocationChanged: LOCATION CHANGED" );
-            mMap.clear();
-            for (int i = 0; i < mMarkers.size(); i++) {
-                mMap.addMarker(mMarkers.get(i));
-            }
-            mMap.addMarker(mMarkerMyLocation);
+            //mMap.clear();
+            //for (int i = 0; i < mMarkers.size(); i++) {
+                //mMap.addMarker(mMarkers.get(i));
+            //}
+            //mMap.addMarker(mMarkerMyLocation);
 //TODO: error NULL
             /*
             Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
@@ -466,10 +407,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             if (provider == getString(R.string.provider_gps)) {
                 Log.e(TAG, "onProviderDisabled: " + provider);
 
-                mMap.clear();
+                /*mMap.clear();
                 for (int i = 0; i < mMarkers.size(); i++) {
                     mMap.addMarker(mMarkers.get(i));
-                }
+                }*/
 
                 /// TODO: CREAR MENSAJE DE ACTIVAR GPS
             }

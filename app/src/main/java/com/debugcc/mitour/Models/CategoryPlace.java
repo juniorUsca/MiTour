@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @IgnoreExtraProperties
 public class CategoryPlace {
-
+    private String ID;
     private Bitmap image;
     private String name;
     private String url;
@@ -86,4 +86,11 @@ public class CategoryPlace {
         this.image = image;
     }
 
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 }

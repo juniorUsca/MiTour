@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 
+import com.debugcc.mitour.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,19 +31,20 @@ public class Route {
     GoogleMap mMap;
     Context context;
     String lang;
+    ArrayList<PolylineOptions> mPolylines = new ArrayList<>();
 
 
-    static String LANGUAGE_SPANISH = "es";
-    static String LANGUAGE_ENGLISH = "en";
-    static String LANGUAGE_FRENCH = "fr";
-    static String LANGUAGE_GERMAN = "de";
-    static String LANGUAGE_CHINESE_SIMPLIFIED = "zh-CN";
-    static String LANGUAGE_CHINESE_TRADITIONAL = "zh-TW";
+    public static final String LANGUAGE_SPANISH = "es";
+    public static final String LANGUAGE_ENGLISH = "en";
+    public static final String LANGUAGE_FRENCH = "fr";
+    public static final String LANGUAGE_GERMAN = "de";
+    public static final String LANGUAGE_CHINESE_SIMPLIFIED = "zh-CN";
+    public static final String LANGUAGE_CHINESE_TRADITIONAL = "zh-TW";
 
-    static String TRANSPORT_DRIVING = "driving";
-    static String TRANSPORT_WALKING = "walking";
-    static String TRANSPORT_BIKE = "bicycling";
-    static String TRANSPORT_TRANSIT = "transit";
+    public static final String TRANSPORT_DRIVING = "driving";
+    public static final String TRANSPORT_WALKING = "walking";
+    public static final String TRANSPORT_BIKE = "bicycling";
+    public static final String TRANSPORT_TRANSIT = "transit";
 
 
     public boolean drawRoute(GoogleMap map, Context c, ArrayList<LatLng> points, boolean withIndications, String language, boolean optimize)
@@ -154,22 +157,27 @@ public class Route {
 
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
-        urlString.append( points.get(0).latitude);
+        //urlString.append( points.get(0).latitude);
+        urlString.append( points.get(1).latitude);
         urlString.append(',');
-        urlString.append(points.get(0).longitude);
+        //urlString.append(points.get(0).longitude);
+        urlString.append(points.get(1).longitude);
         urlString.append("&destination=");
-        urlString.append(points.get(points.size()-1).latitude);
+        //urlString.append(points.get(points.size()-1).latitude);
+        urlString.append(points.get(2).latitude);
         urlString.append(',');
-        urlString.append(points.get(points.size()-1).longitude);
+        //urlString.append(points.get(points.size()-1).longitude);
+        urlString.append(points.get(2).longitude);
 
         urlString.append("&waypoints=");
         if(optimize)
             urlString.append("optimize:true|");
-        urlString.append( points.get(1).latitude);
-        urlString.append(',');
-        urlString.append(points.get(1).longitude);
 
-        for(int i=2;i<points.size()-1;i++)
+        urlString.append( points.get(0).latitude);
+        urlString.append(',');
+        urlString.append(points.get(0).longitude);
+
+        for(int i=3;i<points.size();i++)
         {
             urlString.append('|');
             urlString.append( points.get(i).latitude);
@@ -290,13 +298,17 @@ public class Route {
             String encodedString = overviewPolylines.getString("points");
             List<LatLng> list = decodePoly(encodedString);
 
+            mPolylines.clear();
             for(int z = 0; z<list.size()-1;z++){
                 LatLng src= list.get(z);
                 LatLng dest= list.get(z+1);
-                Polyline line = mMap.addPolyline(new PolylineOptions()
+                PolylineOptions plineopt = new PolylineOptions()
                         .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude, dest.longitude))
                         .width(4)
-                        .color(Color.BLUE).geodesic(true));
+                        .color(ContextCompat.getColor(context, R.color.pink))
+                        .geodesic(true);
+                mMap.addPolyline(plineopt);
+                //Polyline line = mMap.addPolyline(plineopt);
             }
 
 

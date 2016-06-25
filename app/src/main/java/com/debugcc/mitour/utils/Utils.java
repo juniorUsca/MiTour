@@ -40,6 +40,9 @@ public class Utils {
     public static final String PREF_FIRST_SYNC = "Pref_First_Sync";
     public static final String PREF_USER_FIRST_TIME = "Pref_User_First_Time";
 
+    public static final String FIRE_DB_CATEGORIES = "categories";
+    public static final String FIRE_DB_MARKERS = "markers";
+
 
 
 
@@ -118,11 +121,9 @@ public class Utils {
         String path = ctx.getFilesDir().getAbsolutePath() + "/" + name;
         File file = new File (path);
         //if (!file.exists()) {
-        Log.d(TAG, "putPicture: REPLACE " + replace );
-        Log.d(TAG, "putPicture: LAST MODIFIED " + file.lastModified() );
         if (replace > file.lastModified()) {
             try {
-                Log.d(TAG, "getPicture: " + name + " " + url);
+                Log.d(TAG, "DOWNLOADING Picture: " + name + " " + url);
                 URL imageURL = new URL(url);
                 bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
 
