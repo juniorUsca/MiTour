@@ -16,8 +16,10 @@ import java.security.Signature;
 /**
  * Created by dubgcc on 10/06/16.
  */
+// MultiDexApplication
 public class MyApplication extends Application {
 
+    private static final String TAG = "MiTourAPP";
     private GoogleApiClient mGoogleApiClient;
 
 
@@ -30,7 +32,7 @@ public class MyApplication extends Application {
         Log.e("MiTour", "Iniciando APP");
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.android.facebookloginsample",  // replace with your unique package name
+                    "com.debugcc.mitour",  // replace with your unique package name
                     PackageManager.GET_SIGNATURES);
             for (android.content.pm.Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
@@ -38,9 +40,10 @@ public class MyApplication extends Application {
                 Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "onCreate1: ", e);
 
         } catch (NoSuchAlgorithmException e) {
-
+            Log.e(TAG, "onCreate2: ", e);
         }
     }
 

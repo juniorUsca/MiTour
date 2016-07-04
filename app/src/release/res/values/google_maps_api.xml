@@ -16,7 +16,7 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        YOUR_KEY_HERE
-    </string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC4qizF8CyJwe5nug8lerFdAiSmGZIjCnY</string>
+    <string name="facebook_app_id">1742288749389701</string>
+    <string name="fb_login_protocol_scheme">fb1742288749389701</string>
 </resources>

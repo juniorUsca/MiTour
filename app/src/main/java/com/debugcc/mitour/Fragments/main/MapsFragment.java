@@ -307,9 +307,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
             // for ActivityCompat#requestPermissions for more details.
             Log.e(TAG, "onMapReady: NO PERMISSION" );
         }
-        LocationListener locationListener = new MyLocationListener();
-        mLocationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        //LocationListener locationListener = new MyLocationListener();
+        //mLocationManager.requestLocationUpdates(
+                //LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
 
 
         //centerOnMyLocation();

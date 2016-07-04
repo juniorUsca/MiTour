@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "438439636227-1gjtsrt4hvhi76ekm5tprhehenrnrh02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.debugcc.mitour",
+            "certificate_hash": "AF1302FB6DDD0F2E780769AE744DBBFA7950E71C"
+          }
+        },
+        {
           "client_id": "438439636227-qe8mimrs3lc03hj4vul9p4vj07macn4m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -33,7 +41,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC4qizF8CyJwe5nug8lerFdAiSmGZIjCnY"
+          "current_key": "AIzaSyDaYo5b9vVxuGE69WPqppFsTM7ngZSsMC0"
         }
       ],
       "services": {

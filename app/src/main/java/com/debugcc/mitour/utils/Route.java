@@ -182,6 +182,7 @@ public class Route {
 
         urlString.append("&sensor=true&mode="+mode);
 
+        //urlString.append("&key="+context.getString(R.string.google_maps_key));
 
         return urlString.toString();
     }
@@ -202,6 +203,7 @@ public class Route {
         urlString.append(",");
         urlString.append(Double.toString( destlog));
         urlString.append("&sensor=false&mode="+mode+"&alternatives=true&language="+lang);
+        //urlString.append("&key="+context.getString(R.string.google_maps_key));
         return urlString.toString();
     }
 

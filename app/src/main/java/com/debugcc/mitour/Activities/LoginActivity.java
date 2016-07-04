@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 e.printStackTrace();
                             }
                             Toast.makeText(LoginActivity.this,"Bienvenido "+mUser.name,Toast.LENGTH_LONG).show();
-                            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
 
                             LoginActivity.this.finish();
@@ -219,11 +219,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 mUser.print();
 
                 PrefUtils.setCurrentUser(mUser,LoginActivity.this);
-                MyApplication app = (MyApplication) getApplicationContext();
-                app.setGoogleApiClient(mGoogleApiClient);
 
                 Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-
                 LoginActivity.this.startActivity(intent);
                 LoginActivity.this.finish();
             }

@@ -26,8 +26,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.plus.People;
-import com.google.android.gms.plus.Plus;
 
 public class SettingsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {//implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<People.LoadPeopleResult> {
 
@@ -141,41 +139,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
             });*/
         }
     }
-
-    /*@Override
-    public void onConnected(@Nullable Bundle bundle) {
-        // updateUI(true);
-        Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(SettingsActivity.this);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult) {
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }*/
 
     public static class SettingsFragment extends PreferenceFragment {
 

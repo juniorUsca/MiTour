@@ -37,7 +37,7 @@
                 android:title="Aplicaciones Recomendadas" />-->
             <item
                 android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_setting_light"
+                android:icon="@drawable/ic_settings_vector"
                 android:title="Configuraciones" />
             <!--<item
                 android:id="@+id/nav_share"
