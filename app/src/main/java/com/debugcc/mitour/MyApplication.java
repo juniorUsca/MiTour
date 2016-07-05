@@ -7,11 +7,9 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.FacebookSdk;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
 
 /**
  * Created by dubgcc on 10/06/16.
@@ -20,8 +18,6 @@ import java.security.Signature;
 public class MyApplication extends Application {
 
     private static final String TAG = "MiTourAPP";
-    private GoogleApiClient mGoogleApiClient;
-
 
     @Override
     public void onCreate() {
@@ -47,11 +43,4 @@ public class MyApplication extends Application {
         }
     }
 
-    public GoogleApiClient getGoogleApiClient() {
-        return mGoogleApiClient;
-    }
-
-    public void setGoogleApiClient(GoogleApiClient googleApiClient) {
-        this.mGoogleApiClient = googleApiClient;
-    }
 }

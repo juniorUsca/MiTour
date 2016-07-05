@@ -149,7 +149,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
             Bitmap bm = Utils.getPicture(
                     getActivity(),
                     cp.getName(),
-                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_vector) );
+                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_home) );
 
             cp.setImage(bm);
 

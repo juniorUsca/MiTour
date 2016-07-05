@@ -26,6 +26,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {//implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<People.LoadPeopleResult> {
 
@@ -77,9 +78,7 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
 
                 if (mUser.server.equals(User.GOOGLE_SERVER)) {
 
-
-
-                    Log.e(TAG, "onClick: GOOGLE LOGOUT" + mGoogleApiClient.isConnected());
+                    Log.e(TAG, "onClick: GOOGLE LOGOUT " + mGoogleApiClient.isConnected());
 
                     Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
                             new ResultCallback<Status>() {
@@ -91,9 +90,9 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                                 }
                             }
                     );
-
-
                 }
+
+                FirebaseAuth.getInstance().signOut();
 
 
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);

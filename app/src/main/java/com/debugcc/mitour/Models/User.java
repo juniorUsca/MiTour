@@ -20,6 +20,14 @@ public class User {
 
     public String server;
 
+    public User() {
+        this.userID = "";
+        this.name = "";
+        this.email = "";
+        this.urlProfilePicture = "";
+        this.server = "";
+    }
+
     public void print() {
         Log.e("USER", "ID: "+userID+", name: "+name+", email: "+email+", url: "+urlProfilePicture );
     }

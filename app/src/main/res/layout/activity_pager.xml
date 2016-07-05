@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
-            android:text="Saltar"
+            android:text="Omitir"
             android:textColor="@android:color/white" />
 
         <LinearLayout
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center"
-            android:text="Fin"
+            android:text="Comenzar"
             android:textColor="@android:color/white"
             android:visibility="gone" />
 
