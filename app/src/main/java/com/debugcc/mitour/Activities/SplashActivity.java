@@ -20,6 +20,7 @@ import com.debugcc.mitour.Models.CategoryPlace;
 import com.debugcc.mitour.Models.City;
 import com.debugcc.mitour.Models.Marker;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.AsynchronousTasks;
 import com.debugcc.mitour.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -79,8 +80,7 @@ public class SplashActivity extends Activity {
 
         Utils.saveSharedSetting(this, Utils.PREF_FIRST_SYNC, Utils.TRUE);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = AsynchronousTasks.getDatabase();
 
             /*String key = mDatabase.child("categories").push().getKey();
 
@@ -258,10 +258,10 @@ public class SplashActivity extends Activity {
                     //Log.d(TAG, "doInBackground: " + ds.getKey());
                     cp.setID(ds.getKey());
                     cp.setName(ds.child("name").getValue(String.class));
-                    cp.setUrl(ds.child("url").getValue(String.class));
+                    cp.setImageUrl(ds.child("url").getValue(String.class));
                     cp.setReplace(ds.child("replace").getValue(Long.class));
                     //ServerValue.TIMESTAMP
-                    Utils.putPicture(getBaseContext(), cp.getName(), cp.getUrl(), cp.getReplace());
+                    Utils.putPicture(getBaseContext(), cp.getName(), cp.getImageUrl(), cp.getReplace());
 
                     categoriesPlaces.add(cp);
                 }

@@ -6,6 +6,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ServerValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,4 +83,8 @@ public class Marker {
     public void setID(String ID) {
         this.ID = ID;
     }
+
+
+    @Exclude
+    public static final List<Marker> MARKERS = new ArrayList<>();
 }

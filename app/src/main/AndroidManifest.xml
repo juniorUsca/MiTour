@@ -15,12 +15,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
-    <!--
-        TODO: Fix dex, deshabilitar el multidex y arreglar dex
-        https://developer.android.com/studio/build/multidex.html#mdex-gradle
-
-        android:name="android.support.multidex.MultiDexApplication"
-    -->
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -28,7 +22,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -66,8 +59,36 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:parentActivityName=".Activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.debugcc.mitour.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activities.home.CityDetailActivity"
+            android:parentActivityName=".Activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.debugcc.mitour.Activities.MainActivity" />
+        </activity>
 
-        <activity android:name=".Activities.SettingsActivity" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".Activities.home.CityMapActivity"
+            android:label="@string/title_activity_city_map"
+            android:parentActivityName=".Activities.home.CityDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.debugcc.mitour.Activities.home.CityDetailActivity" />
+        </activity>
     </application>
 
 </manifest>

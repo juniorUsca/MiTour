@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="horizontal"
+    android:showDividers="middle"
+
+    tools:context="com.debugcc.mitour.Fragments.home.HomeFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_citiesList"
+        android:layout_width="@dimen/item_width"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/row_city">
+    </android.support.v7.widget.RecyclerView>
+
+    <FrameLayout
+        android:id="@+id/city_detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
+</LinearLayout>

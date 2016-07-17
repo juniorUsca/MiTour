@@ -6,7 +6,7 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_vector"
             android:title="@string/text_home" />
-        <!--<item
+        <item
             android:id="@+id/nav_memories"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/text_memories" />
@@ -14,7 +14,7 @@
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_location_on_vector"
             android:title="@string/text_map" />
-        <item
+        <!--<item
             android:id="@+id/nav_places"
             android:icon="@drawable/ic_near_me_vector"
             android:title="@string/text_places" />

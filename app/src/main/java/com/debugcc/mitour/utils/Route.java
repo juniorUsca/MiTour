@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.util.Log;
 
 import com.debugcc.mitour.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,10 +29,13 @@ import java.util.List;
  * Created by dubgcc on 06/06/16.
  */
 public class Route {
+    private static final String TAG = "Route";
     GoogleMap mMap;
     Context context;
     String lang;
     public ArrayList<PolylineOptions> mPolylines = new ArrayList<>();
+
+    public static String result_end = null;
 
 
     public static final String LANGUAGE_SPANISH = "es";
@@ -100,13 +104,20 @@ public class Route {
         if(points.size() == 2)
         {
             String url = makeURL(points.get(0).latitude,points.get(0).longitude,points.get(1).latitude,points.get(1).longitude,mode);
-            new connectAsyncTask(url,withIndications).execute();
+            if (result_end != null)
+                drawPath(result_end, false);
+            else
+                new connectAsyncTask(url,withIndications).execute();
             return true;
         }
         else if(points.size() > 2)
         {
             String url = makeURL(points,mode,optimize);
-            new connectAsyncTask(url,withIndications).execute();
+            //new connectAsyncTask(url,withIndications).execute();
+            if (result_end != null)
+                drawPath(result_end, false);
+            else
+                new connectAsyncTask(url,withIndications).execute();
             return true;
         }
 
@@ -155,7 +166,7 @@ public class Route {
         if(mode == null)
             mode = "driving";
 
-        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("https://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
         urlString.append( points.get(0).latitude);
         urlString.append(',');
@@ -254,14 +265,13 @@ public class Route {
         connectAsyncTask(String urlPass, boolean withSteps){
             url = urlPass;
             steps = withSteps;
-
         }
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
-            progressDialog.setMessage("Fetching route, Please wait...");
+            progressDialog.setMessage("Obteniendo su ruta, Por favor espere...");
             progressDialog.setIndeterminate(true);
             progressDialog.show();
         }
@@ -275,9 +285,11 @@ public class Route {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.hide();
-            if(result!=null){
+            if(result!=null) {
+                result_end = result;
                 drawPath(result,steps);
             }
+            progressDialog.dismiss();
         }
     }
 

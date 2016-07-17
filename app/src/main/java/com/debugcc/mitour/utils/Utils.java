@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.debugcc.mitour.Models.User;
@@ -167,4 +168,28 @@ public class Utils {
         // (Drawable) return new BitmapDrawable(bitmap);
     }
 
+
+
+
+    /// DIALOGS
+
+    public static void confirmFeedBack(Context ctx) {
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("hola")
+                .setTitle("mi titulo");
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    /// CHARGE DATA
+
+    public static void chargeDataLoged() {
+        AsynchronousTasks.getCitiesForHome();
+    }
 }

@@ -49,4 +49,6 @@
     <color name="cyan_tr">#0090B0</color>
     <color name="orange_tr">#D08000</color>
     <color name="green_tr">#309040</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

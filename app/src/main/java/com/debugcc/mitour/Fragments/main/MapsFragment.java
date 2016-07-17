@@ -167,6 +167,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
     }
 
+    /**
+     * click en alguna categoria
+     * @param item
+     */
     @Override
     public void onItemClick(CategoryPlace item) {
         mMarkersShow.clear();
@@ -177,6 +181,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
             for (int i = 0; i < mMarkers.size(); i++) {
                 mMarkersShow.add( mMarkers.get(i) );
             }
+            //Utils.confirmFeedBack(getContext());
         } else {
             for (int i = 0; i < mMarkersModel.size(); i++) {
                 Marker m = mMarkersModel.get(i);
@@ -202,6 +207,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
 
         fillMap();
     }
+
+
+
+
+
+
+
 
     public void fillMap() {
         mMap.clear();

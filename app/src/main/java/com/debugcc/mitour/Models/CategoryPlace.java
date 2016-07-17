@@ -23,7 +23,7 @@ public class CategoryPlace {
     private String ID;
     private Bitmap image;
     private String name;
-    private String url;
+    private String image_url;
     private Long replace;
 
 
@@ -56,18 +56,18 @@ public class CategoryPlace {
     public Map<String, Object> toMap() {
         Log.d("TOMAP", "toMap: ");
         HashMap<String, Object> result = new HashMap<>();
-        result.put("url", url);
+        result.put("image_url", image_url);
         result.put("name", name);
         result.put("replace", ServerValue.TIMESTAMP);
         return result;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageUrl() {
+        return image_url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImageUrl(String image_url) {
+        this.image_url = image_url;
     }
 
     public Long getReplace() {

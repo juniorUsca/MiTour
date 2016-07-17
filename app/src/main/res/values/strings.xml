@@ -36,5 +36,7 @@
     </string>
     <string name="title_activity_on_boarding">OnBoardingActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="text_info">Información</string>
+    <string name="title_activity_city_map">CityMapActivity</string>
 
 </resources>

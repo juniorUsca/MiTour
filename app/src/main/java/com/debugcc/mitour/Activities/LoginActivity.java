@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 mProgressDialog = new ProgressDialog(LoginActivity.this);
-                mProgressDialog.setMessage("Loading...");
+                mProgressDialog.setMessage("Cargando...");
                 mProgressDialog.show();
 
                 mLoginFacebookButton.performClick();
@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 mProgressDialog = new ProgressDialog(LoginActivity.this);
-                mProgressDialog.setMessage("Loading...");
+                mProgressDialog.setMessage("Cargando...");
                 mProgressDialog.show();
 
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -276,7 +276,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 mUser.userID = acct.getId();
                 mUser.email = acct.getEmail();
                 mUser.name = acct.getDisplayName();
-                mUser.urlProfilePicture = acct.getPhotoUrl().toString();
+                if( acct.getPhotoUrl() != null)
+                    mUser.urlProfilePicture = acct.getPhotoUrl().toString();
                 mUser.server = User.GOOGLE_SERVER;
 
                 mUser.print();
