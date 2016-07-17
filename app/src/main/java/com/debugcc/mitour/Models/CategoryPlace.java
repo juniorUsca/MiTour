@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,40 +27,11 @@ public class CategoryPlace {
     private String image_url;
     private Long replace;
 
-
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Exclude
-    public ArrayList<CategoryPlace> parse(JSONArray json) {
-        ArrayList<CategoryPlace> temp = new ArrayList<>();
-        for (int i = 0; i < json.length(); i++) {
-            CategoryPlace c = new CategoryPlace();
-            try {
-                JSONObject jobject = (JSONObject) json.get(i);
-                c.setName(jobject.getString("name"));
-                //c.setImage(jobject.getString("image"));
-                temp.add(c);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return temp;
-    }
-
-    @Exclude
-    public Map<String, Object> toMap() {
-        Log.d("TOMAP", "toMap: ");
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("image_url", image_url);
-        result.put("name", name);
-        result.put("replace", ServerValue.TIMESTAMP);
-        return result;
     }
 
     public String getImageUrl() {
@@ -101,4 +73,41 @@ public class CategoryPlace {
                 return i;
         return -1;
     }
+
+    @Exclude
+    public ArrayList<CategoryPlace> parse(JSONArray json) {
+        ArrayList<CategoryPlace> temp = new ArrayList<>();
+        for (int i = 0; i < json.length(); i++) {
+            CategoryPlace c = new CategoryPlace();
+            try {
+                JSONObject jobject = (JSONObject) json.get(i);
+                c.setName(jobject.getString("name"));
+                //c.setImage(jobject.getString("image"));
+                temp.add(c);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return temp;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        Log.d("TOMAP", "toMap: ");
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("image_url", image_url);
+        result.put("name", name);
+        result.put("replace", ServerValue.TIMESTAMP);
+        return result;
+    }
+
+    @Exclude
+    public static CategoryPlace CURRENT_CATEGORY = null;
+
+    @Exclude
+    public static final List<CategoryPlace> CATEGORIES = new ArrayList<>();
+
+    @Exclude
+    public static final Map<String, CategoryPlace> CATEGORIES_MAP = new HashMap<>();
 }

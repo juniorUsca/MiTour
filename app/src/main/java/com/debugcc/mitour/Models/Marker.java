@@ -87,4 +87,6 @@ public class Marker {
 
     @Exclude
     public static final List<Marker> MARKERS = new ArrayList<>();
+    @Exclude
+    public static final Map<String, Marker> MARKERS_MAP = new HashMap<>();
 }

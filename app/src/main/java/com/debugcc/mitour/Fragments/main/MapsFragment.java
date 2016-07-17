@@ -172,7 +172,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
      * @param item
      */
     @Override
-    public void onItemClick(CategoryPlace item) {
+    public void onItemClick(int pos, CategoryPlace item) {
         mMarkersShow.clear();
 
         if (mCategoriesPlaces.get(0).getID().equals(

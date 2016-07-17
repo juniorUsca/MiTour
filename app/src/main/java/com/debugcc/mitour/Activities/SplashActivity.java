@@ -261,7 +261,8 @@ public class SplashActivity extends Activity {
                     cp.setImageUrl(ds.child("url").getValue(String.class));
                     cp.setReplace(ds.child("replace").getValue(Long.class));
                     //ServerValue.TIMESTAMP
-                    Utils.putPicture(getBaseContext(), cp.getName(), cp.getImageUrl(), cp.getReplace());
+
+                    //Utils.putPicture(getBaseContext(), cp.getName(), cp.getImageUrl(), cp.getReplace());
 
                     categoriesPlaces.add(cp);
                 }

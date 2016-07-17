@@ -12,7 +12,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@android:drawable/ic_menu_report_image"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -26,7 +26,7 @@
         android:layout_below="@+id/categoryPlace_image"
         android:layout_centerHorizontal="true"
         android:textColor="@color/color_light"
-        android:textSize="10dp"/>
+        android:textSize="12sp"/>
 
 
 </RelativeLayout>
