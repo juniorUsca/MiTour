@@ -1,5 +1,6 @@
 package com.debugcc.mitour.Adapters;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -75,12 +76,11 @@ public class CategoryPlaceAdapter extends RecyclerView.Adapter<CategoryPlaceAdap
         }
 
         public void bind(final CategoryPlace category) {
-            //mImage.setImageBitmap(category.getImage());
             Glide.with(itemView.getContext())
                     .load(category.getImageUrl())
-                    .placeholder(R.drawable.ic_menu_camera)
+                    .placeholder(R.drawable.ic_home)
                     .fitCenter()
-                    .placeholder(R.drawable.ic_menu_camera)
+                    .placeholder(R.drawable.ic_home)
                     .into(mImage);
 
             mName.setText(category.getName());
@@ -91,6 +91,13 @@ public class CategoryPlaceAdapter extends RecyclerView.Adapter<CategoryPlaceAdap
                     mListener.onItemClick(getAdapterPosition(), category);
                 }
             });
+        }
+
+        public void setSelected(boolean selected) {
+            if(selected)
+                mName.setTextColor(Color.YELLOW);
+            else
+                mName.setTextColor(Color.WHITE);
         }
     }
 

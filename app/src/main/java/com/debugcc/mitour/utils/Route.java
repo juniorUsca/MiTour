@@ -182,7 +182,9 @@ public class Route {
         if(optimize)
             urlString.append("optimize:true|");
 
-        for(int i=2;i<points.size();i++)
+        /// TODO: Solo se permiten 10 puntos incluidos inicio y fin
+        //for(int i=2;i<points.size();i++)
+        for(int i=2; i<10; i++)
         {
             urlString.append('|');
             urlString.append( points.get(i).latitude);

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -33,15 +34,21 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CityMapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "CityMapFragment";
 
     private City mCity;
     private RecyclerView.Adapter mCategoryAdapter;
+    RecyclerView recyclerView_categoriesPlaces;
 
     private GoogleMap mMap;
     private LatLng center;
+
+    private List<com.google.android.gms.maps.model.Marker> mMarkers;
 
     public CityMapFragment() {
     }
@@ -50,6 +57,8 @@ public class CityMapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCity = City.CURRENT_CITY;
+        mMarkers = new ArrayList<>();
+
         AsynchronousTasks.getCategoriesPlaces();
         AsynchronousTasks.getMarkerFromCity(mCity.getID());
     }
@@ -81,12 +90,24 @@ public class CityMapFragment extends Fragment implements OnMapReadyCallback {
         //LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         //layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        RecyclerView recyclerView_categoriesPlaces = (RecyclerView) activity.findViewById(R.id.recycler_categories_places_on_city);
+        recyclerView_categoriesPlaces = (RecyclerView) activity.findViewById(R.id.recycler_categories_places_on_city);
         recyclerView_categoriesPlaces.setHasFixedSize(true);
         mCategoryAdapter = new CategoryPlaceAdapter(CategoryPlace.CATEGORIES);
         recyclerView_categoriesPlaces.setAdapter(mCategoryAdapter);
         //recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
+
+        /*recyclerView_categoriesPlaces.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                /// SELECTING ITEM
+                CategoryPlace.CURRENT_CATEGORY_POS = 0;
+                //CategoryPlace.CURRENT_CATEGORY = CategoryPlace.CATEGORIES.get(CategoryPlace.CURRENT_CATEGORY_POS);
+
+                CategoryPlaceAdapter.ViewHolder v = (CategoryPlaceAdapter.ViewHolder) recyclerView_categoriesPlaces.findViewHolderForLayoutPosition(CategoryPlace.CURRENT_CATEGORY_POS);
+                v.setSelected(true);
+            }
+        });*/
     }
 
     @Override
@@ -98,9 +119,50 @@ public class CityMapFragment extends Fragment implements OnMapReadyCallback {
         ((CategoryPlaceAdapter) mCategoryAdapter).setOnItemClickListener(new CategoryPlaceAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos, CategoryPlace category) {
-                Log.d(TAG, "onItemClick: " + pos + " category " + category.getName());
+
+                if (CategoryPlace.CURRENT_CATEGORY != null) {
+                    CategoryPlaceAdapter.ViewHolder v = (CategoryPlaceAdapter.ViewHolder) recyclerView_categoriesPlaces.findViewHolderForLayoutPosition(CategoryPlace.CURRENT_CATEGORY_POS);
+                    if (v != null)
+                        v.setSelected(false);
+                }
+
+                CategoryPlaceAdapter.ViewHolder v = (CategoryPlaceAdapter.ViewHolder) recyclerView_categoriesPlaces.findViewHolderForLayoutPosition(pos);
+                v.setSelected(true);
+
+                CategoryPlace.CURRENT_CATEGORY_POS = pos;
+                CategoryPlace.CURRENT_CATEGORY = category;
+
+                for (int i = 0; i < mMarkers.size(); ++i) {
+                    mMarkers.get(i).setVisible(false);
+                }
+
+                if ( pos == 0 || CategoryPlace.CATEGORIES.get(0).getID().equals(
+                                    category.getID() ))
+                {
+                    /// SHOW ALL MARKERS
+                    for (int i = 0; i < mMarkers.size(); ++i)
+                        mMarkers.get(i).setVisible(true);
+                } else {
+                    for (int i = 0; i < Marker.MARKERS.size(); i++) {
+                        Marker m = Marker.MARKERS.get(i);
+
+                        int flag_belongs = -1;
+                        for (int j = 0; j < m.getCategories().size(); j++) {
+
+                            if ( m.getCategories().get(j).equals( category.getID() ) )
+                                flag_belongs = j;
+
+                        }
+                        if (flag_belongs >= 0)
+                            mMarkers.get(i).setVisible(true);
+
+                    }
+                }
+
+
             }
         });
+
     }
 
     /**
@@ -126,34 +188,46 @@ public class CityMapFragment extends Fragment implements OnMapReadyCallback {
                 , 15));
 
 
-        for (int i = 0; i < Marker.MARKERS.size(); ++i) {
-            LatLng ll = new LatLng(Double.parseDouble(Marker.MARKERS.get(i).getLat()),
-                    Double.parseDouble(Marker.MARKERS.get(i).getLng()));
-            //mLatLngs.add(ll);
+        drawMarkers();
 
-            CategoryPlace ctP = CategoryPlace.CATEGORIES_MAP.get( Marker.MARKERS.get(i).getCategories().get(0) );
 
-            final MarkerOptions markerOption = new MarkerOptions()
-                    .position( ll )
-                    .title( Marker.MARKERS.get(i).getName() )
-                    .snippet( Marker.MARKERS.get(i).getDetails() );
+    }
 
-            final com.google.android.gms.maps.model.Marker marker = mMap.addMarker( markerOption );
 
-            Glide.with(getContext())
-                    .load( ctP.getImageUrl() )
-                    .asBitmap()
-                    .override(42,42)
-                    .fitCenter()
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap( resource );
-                            marker.setIcon(icon);
-                        }
-                    });
+    private void drawMarkers() {
+
+        /// ADD MARKERS IF DONT EXISTS
+        if (mMarkers.isEmpty()) {
+            for (int i = 0; i < Marker.MARKERS.size(); ++i) {
+                LatLng ll = new LatLng(Double.parseDouble(Marker.MARKERS.get(i).getLat()),
+                        Double.parseDouble(Marker.MARKERS.get(i).getLng()));
+                //mLatLngs.add(ll);
+
+                CategoryPlace ctP = CategoryPlace.CATEGORIES_MAP.get( Marker.MARKERS.get(i).getCategories().get(0) );
+
+                final MarkerOptions markerOption = new MarkerOptions()
+                        .position( ll )
+                        .title( Marker.MARKERS.get(i).getName() )
+                        .snippet( Marker.MARKERS.get(i).getDetails() );
+
+                final com.google.android.gms.maps.model.Marker marker = mMap.addMarker( markerOption );
+
+                mMarkers.add(marker);
+
+                Glide.with(getContext())
+                        .load( ctP.getImageUrl() )
+                        .asBitmap()
+                        .override(42,42)
+                        .fitCenter()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap( resource );
+                                marker.setIcon(icon);
+                            }
+                        });
+            }
         }
-
 
     }
 

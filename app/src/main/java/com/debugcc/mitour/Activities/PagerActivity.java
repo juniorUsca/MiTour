@@ -28,11 +28,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.debugcc.mitour.R;
 import com.debugcc.mitour.utils.PrefUtils;
 import com.debugcc.mitour.utils.Utils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class PagerActivity extends AppCompatActivity {
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     /**
@@ -73,6 +77,13 @@ public class PagerActivity extends AppCompatActivity {
         }*/
 
         setContentView(R.layout.activity_pager);
+
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Utils.getDeviceName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.TUTORIAL_BEGIN, bundle);
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -183,11 +194,14 @@ public class PagerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //  update 1st time pref
                 Utils.saveSharedSetting(PagerActivity.this, Utils.PREF_USER_FIRST_TIME, Utils.FALSE);
-                Intent mainIntent = new Intent(PagerActivity.this, LoginActivity.class);
 
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Utils.getDeviceName());
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.TUTORIAL_COMPLETE, bundle);
+
+                Intent mainIntent = new Intent(PagerActivity.this, LoginActivity.class);
                 PagerActivity.this.startActivity(mainIntent);
                 PagerActivity.this.finish();
-
             }
         });
     }

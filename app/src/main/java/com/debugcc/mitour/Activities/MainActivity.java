@@ -1,11 +1,14 @@
 package com.debugcc.mitour.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
@@ -17,19 +20,33 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.debugcc.mitour.Fragments.home.HomeFragment;
 import com.debugcc.mitour.Fragments.main.MapsFragment;
+import com.debugcc.mitour.Models.User;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.PrefUtils;
 import com.debugcc.mitour.utils.Utils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
-    private static int ZERO = 0;
+
+    public static int HOME_TAB = 0;
+    public static int MAP_TAB = 1;
+    public static int CURRENT_TAB = HOME_TAB;
+
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     FloatingActionButton fab_main;
     private NavigationView mNavigationView;
 
@@ -37,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //toolbar.setTitle(getTitle());
@@ -47,32 +65,25 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        fab_main = (FloatingActionButton) findViewById(R.id.fab_mylocation);
-        fab_main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
-        /// charge data from Logged
-        Utils.chargeDataLoged();
-
-
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.container_main,new HomeFragment())
-                .commit();
+        fab_main = (FloatingActionButton) findViewById(R.id.main_fab);
+        fab_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CURRENT_TAB = MAP_TAB;
+                chargeCurrentTab();
+            }
+        });
 
-        MenuItem item = mNavigationView.getMenu().getItem(ZERO);
-        setTitle(item.getTitle());
-        item.setChecked(true);
+        /// charge data from Logged
+        Utils.chargeDataLoged();
+        chargeProfile();
+
+
+        chargeCurrentTab();
+
 
 
         /*final ActionBar actionBar = getSupportActionBar();
@@ -82,7 +93,77 @@ public class MainActivity extends AppCompatActivity
             //actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_vector);
         }*/
 
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(MainActivity.this).getEmail());
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(MainActivity.this).getName());
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(MainActivity.this).getServer());
+        mFirebaseAnalytics.logEvent("into_MainActivity", params);
+
     }
+
+    /**
+     * CHARGE CURRENT FRAGMENT
+     */
+    private void chargeCurrentTab() {
+        Fragment genericFragment = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (CURRENT_TAB == HOME_TAB) {
+            fab_main.setVisibility(View.VISIBLE);
+            genericFragment = new HomeFragment();
+        }
+        if (CURRENT_TAB == MAP_TAB) {
+            fab_main.setVisibility(View.GONE);
+            genericFragment = new MapsFragment();
+        }
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.container_main, genericFragment)
+                .commit();
+
+        MenuItem item = mNavigationView.getMenu().getItem( CURRENT_TAB );
+        setTitle(item.getTitle());
+        item.setChecked(true);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    private void chargeProfile() {
+        View header = mNavigationView.getHeaderView(0);
+
+        final ImageView user_profile = (ImageView) header.findViewById(R.id.user_picture);
+        TextView user_name = (TextView) header.findViewById(R.id.user_name);
+        TextView user_email = (TextView) header.findViewById(R.id.user_email);
+
+        User user = PrefUtils.getCurrentUser(MainActivity.this);
+
+        Glide.with(this)
+                .load(user.getUrlProfilePicture())
+                .asBitmap()
+                .centerCrop()
+                .error(R.drawable.ic_action_user)
+                .into(new BitmapImageViewTarget(user_profile) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(getBaseContext().getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                user_profile.setImageDrawable(circularBitmapDrawable);
+            }
+        });
+
+        user_name.setText(user.getName());
+        user_email.setText(user.getEmail());
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -127,13 +208,15 @@ public class MainActivity extends AppCompatActivity
         Fragment genericFragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        fab_main.hide();
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            fab_main.setVisibility(View.VISIBLE);
             genericFragment = HomeFragment.newInstance("hola1","hola2");
         } else if (id == R.id.nav_map) {
+            fab_main.setVisibility(View.GONE);
             genericFragment = MapsFragment.newInstance("hola1","hola2");
             //fab_main.setImageResource(R.drawable.ic_my_location_vector);
             //fab_main.show();

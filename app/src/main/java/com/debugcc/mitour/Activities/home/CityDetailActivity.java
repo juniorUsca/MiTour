@@ -15,16 +15,20 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.debugcc.mitour.Activities.MainActivity;
 import com.debugcc.mitour.Fragments.home.CityDetailFragment;
 import com.debugcc.mitour.Fragments.home.CityMapFragment;
 import com.debugcc.mitour.Fragments.home.HomeFragment;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.PrefUtils;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class CityDetailActivity extends AppCompatActivity {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +106,15 @@ public class CityDetailActivity extends AppCompatActivity {
                     .add(R.id.city_detail_container, fragment)
                     .commit();
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(CityDetailActivity.this).getEmail());
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(CityDetailActivity.this).getName());
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(CityDetailActivity.this).getServer());
+        mFirebaseAnalytics.logEvent("into_CityDetailActivity", params);
+
     }
 
     @Override
@@ -115,7 +128,8 @@ public class CityDetailActivity extends AppCompatActivity {
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
             //navigateUpTo(new Intent(this, ItemListActivity.class));
-            navigateUpTo(new Intent(this, HomeFragment.class));
+            MainActivity.CURRENT_TAB = MainActivity.HOME_TAB;
+            navigateUpTo(new Intent(this, MainActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

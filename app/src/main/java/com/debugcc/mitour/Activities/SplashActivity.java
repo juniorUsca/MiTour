@@ -22,6 +22,7 @@ import com.debugcc.mitour.Models.Marker;
 import com.debugcc.mitour.R;
 import com.debugcc.mitour.utils.AsynchronousTasks;
 import com.debugcc.mitour.utils.Utils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,7 +77,6 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);*/
-
 
         Utils.saveSharedSetting(this, Utils.PREF_FIRST_SYNC, Utils.TRUE);
 
@@ -258,11 +258,11 @@ public class SplashActivity extends Activity {
                     //Log.d(TAG, "doInBackground: " + ds.getKey());
                     cp.setID(ds.getKey());
                     cp.setName(ds.child("name").getValue(String.class));
-                    cp.setImageUrl(ds.child("url").getValue(String.class));
-                    cp.setReplace(ds.child("replace").getValue(Long.class));
+                    cp.setImageUrl(ds.child("image_url").getValue(String.class));
+                    cp.setModifiedAt(ds.child("modifiedAt").getValue(Long.class));
                     //ServerValue.TIMESTAMP
 
-                    //Utils.putPicture(getBaseContext(), cp.getName(), cp.getImageUrl(), cp.getReplace());
+                    Utils.putPicture(getBaseContext(), cp.getName(), cp.getImageUrl(), cp.getModifiedAt());
 
                     categoriesPlaces.add(cp);
                 }

@@ -7,7 +7,11 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.FacebookSdk;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -41,6 +45,19 @@ public class MyApplication extends Application {
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "onCreate2: ", e);
         }
+
+        /* Use on Async Task
+
+        AdvertisingIdClient.Info idInfo = null;
+        try {
+            idInfo = AdvertisingIdClient.getAdvertisingIdInfo(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        }*/
     }
 
 }

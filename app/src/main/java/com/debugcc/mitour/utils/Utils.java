@@ -8,8 +8,10 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.debugcc.mitour.Models.User;
@@ -114,7 +116,7 @@ public class Utils {
     /**
      * Function to download images on ASYNC
      *
-     * Long replace is a timestamp to know if we need reemplace the image
+     * Long replace is a timestamp to know if we need replace the image
      */
     public static void putPicture(Context ctx, String name, String url, Long replace){
         Bitmap bitmap = null;
@@ -169,6 +171,42 @@ public class Utils {
     }
 
 
+    /// MOBILE MODEL
+
+    /** Returns the consumer friendly device name */
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        }
+        return capitalize(manufacturer) + " " + model;
+    }
+
+    private static String capitalize(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        char[] arr = str.toCharArray();
+        boolean capitalizeNext = true;
+
+//        String phrase = "";
+        StringBuilder phrase = new StringBuilder();
+        for (char c : arr) {
+            if (capitalizeNext && Character.isLetter(c)) {
+//                phrase += Character.toUpperCase(c);
+                phrase.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+                continue;
+            } else if (Character.isWhitespace(c)) {
+                capitalizeNext = true;
+            }
+//            phrase += c;
+            phrase.append(c);
+        }
+
+        return phrase.toString();
+    }
 
 
     /// DIALOGS

@@ -10,10 +10,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.debugcc.mitour.Activities.MainActivity;
 import com.debugcc.mitour.Fragments.home.CityMapFragment;
+import com.debugcc.mitour.Models.City;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.PrefUtils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class CityMapActivity extends AppCompatActivity {
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +33,7 @@ public class CityMapActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                redirectToMain();
             }
         });
 
@@ -47,6 +52,21 @@ public class CityMapActivity extends AppCompatActivity {
                     .add(R.id.city_map_container, fragment)
                     .commit();
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(CityMapActivity.this).getEmail());
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(CityMapActivity.this).getName());
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(CityMapActivity.this).getServer());
+        mFirebaseAnalytics.logEvent("into_CityMapActivity", params);
+
+        Bundle params_where_traveling = new Bundle();
+        params_where_traveling.putString(FirebaseAnalytics.Param.ITEM_ID, City.CURRENT_CITY.getID());
+        params_where_traveling.putString(FirebaseAnalytics.Param.ITEM_NAME, City.CURRENT_CITY.getCity());
+        params_where_traveling.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, City.CURRENT_CITY.getCountry());
+        mFirebaseAnalytics.logEvent("traveling", params_where_traveling);
+
     }
 
     @Override
@@ -64,5 +84,16 @@ public class CityMapActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+
+    /**
+     * REDIRECTIONS -->
+     */
+    void redirectToMain() {
+        Intent intent = new Intent(CityMapActivity.this, MainActivity.class);
+        MainActivity.CURRENT_TAB = MainActivity.MAP_TAB;
+
+        this.startActivity(intent);
     }
 }

@@ -26,11 +26,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {//implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<People.LoadPeopleResult> {
 
-    private static final String TAG = "SettignsActivity";
+    private static final String TAG = "SettingsActivity";
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     private Button btnLogout;
     private User mUser;
     private GoogleApiClient mGoogleApiClient;
@@ -63,9 +67,25 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                 btnLogout.setBackgroundColor( getResources().getColor(R.color.red) );
         }
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(SettingsActivity.this);
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(SettingsActivity.this).getEmail());
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(SettingsActivity.this).getName());
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(SettingsActivity.this).getServer());
+        mFirebaseAnalytics.logEvent("into_SettingsActivity", params);
+
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /// ANALYTICS
+                Bundle params = new Bundle();
+                params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(SettingsActivity.this).getEmail());
+                params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(SettingsActivity.this).getName());
+                params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(SettingsActivity.this).getServer());
+                mFirebaseAnalytics.logEvent("logout", params);
+                /// END Analytics
 
                 PrefUtils.clearCurrentUser(SettingsActivity.this);
 
@@ -93,7 +113,6 @@ public class SettingsActivity extends AppCompatActivity implements GoogleApiClie
                 }
 
                 FirebaseAuth.getInstance().signOut();
-
 
                 Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
                 startActivity(i);

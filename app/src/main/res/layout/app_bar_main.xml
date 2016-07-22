@@ -24,12 +24,11 @@
     <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_mylocation"
+        android:id="@+id/main_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_my_location_vector"
-        android:visibility="gone"/>
+        android:src="@drawable/ic_send_vector" />
 
 </android.support.design.widget.CoordinatorLayout>

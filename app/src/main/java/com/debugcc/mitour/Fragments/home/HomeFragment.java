@@ -21,6 +21,7 @@ import com.debugcc.mitour.Models.City;
 import com.debugcc.mitour.R;
 import com.debugcc.mitour.utils.AsynchronousTasks;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     private String mParam1;
     private String mParam2;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private FloatingActionButton fab_main;
     private RecyclerView.Adapter mCityAdapter;
     private OnFragmentInteractionListener mListener;
@@ -52,6 +54,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -64,14 +67,14 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        fab_main = (FloatingActionButton) getActivity().findViewById(R.id.fab_mylocation);
+        /*fab_main = (FloatingActionButton) getActivity().findViewById(R.id.main_fab);
         fab_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Planificar viaje", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         return v;
     }
@@ -110,9 +113,7 @@ public class HomeFragment extends Fragment {
         ((CityAdapter) mCityAdapter).setOnItemClickListener(new CityAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos, City city) {
-                Log.d(TAG, "onItemClick: " + pos);
-                Log.d(TAG, "onItemClick: " + city.getCity());
-                Log.d(TAG, "onItemClick: " + city.getID());
+
                 AsynchronousTasks.getMarkerFromCity(city.getID());
 
                 if (mListener != null) {
@@ -120,6 +121,19 @@ public class HomeFragment extends Fragment {
 
 
                     City.CURRENT_CITY = city;
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, city.getID());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, city.getCity());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, city.getCountry());
+                    //bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "City");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
+
+                    Bundle params = new Bundle();
+                    params.putString(FirebaseAnalytics.Param.ITEM_ID, city.getID());
+                    params.putString("city", city.getCity());
+                    params.putString("country", city.getCountry());
+                    mFirebaseAnalytics.logEvent("cities_selected", params);
 
                     if (mTwoPane) {
                         /// recarga el fragmento details

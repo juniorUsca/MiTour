@@ -36,6 +36,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private ProgressDialog mProgressDialog;
 
     ///firebase
+    private FirebaseAnalytics mFirebaseAnalytics = null;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     /// google
@@ -97,14 +99,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 e.printStackTrace();
                             }
                             mUser.server = User.FACEBOOK_SERVER;
-                            mUser.print();
-                            PrefUtils.setCurrentUser(mUser,LoginActivity.this);
 
-                            Toast.makeText(LoginActivity.this,"Bienvenido "+mUser.name,Toast.LENGTH_LONG).show();
-                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-
-                            LoginActivity.this.finish();
+                            saveUserAndRedirect();
                         }
                     });
 
@@ -133,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -195,6 +192,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             }
         };
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -280,13 +279,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     mUser.urlProfilePicture = acct.getPhotoUrl().toString();
                 mUser.server = User.GOOGLE_SERVER;
 
-                mUser.print();
-
-                PrefUtils.setCurrentUser(mUser,LoginActivity.this);
-
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                LoginActivity.this.startActivity(intent);
-                LoginActivity.this.finish();
+                saveUserAndRedirect();
             }
 
 
@@ -341,6 +334,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+
+    private void saveUserAndRedirect() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mUser.getEmail());
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mUser.getName());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, mUser.getServer());
+        if (mFirebaseAnalytics != null)
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+
+        PrefUtils.setCurrentUser(mUser, LoginActivity.this);
+
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        LoginActivity.this.startActivity(intent);
+        LoginActivity.this.finish();
     }
 }
 

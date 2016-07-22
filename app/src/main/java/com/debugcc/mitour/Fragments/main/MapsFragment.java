@@ -36,6 +36,7 @@ import com.debugcc.mitour.Adapters.CategoryPlaceAdapter;
 import com.debugcc.mitour.Models.CategoryPlace;
 import com.debugcc.mitour.Models.Marker;
 import com.debugcc.mitour.R;
+import com.debugcc.mitour.utils.PrefUtils;
 import com.debugcc.mitour.utils.Route;
 import com.debugcc.mitour.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,6 +48,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -66,7 +68,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
     private String mParam2;
 
     //private OnFragmentInteractionListener mListener;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private RecyclerView recyclerView_categoriesPlaces;
 
     private GoogleMap mMap;
     private FloatingActionButton fab_myposition;
@@ -111,6 +114,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Override
@@ -119,7 +123,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        fab_myposition = (FloatingActionButton) getActivity().findViewById(R.id.fab_mylocation);
+        fab_myposition = (FloatingActionButton) getActivity().findViewById(R.id.main_fab);
         fab_myposition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,11 +164,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        RecyclerView recyclerView_categoriesPlaces = (RecyclerView) this.getActivity().findViewById(R.id.recycler_categoriesPlaces);
+        recyclerView_categoriesPlaces = (RecyclerView) this.getActivity().findViewById(R.id.recycler_categoriesPlaces);
         recyclerView_categoriesPlaces.setHasFixedSize(true);
         recyclerView_categoriesPlaces.setAdapter(new CategoryPlaceAdapter(mCategoriesPlaces, this));
         recyclerView_categoriesPlaces.setLayoutManager(layoutManager);
         //recyclerView_categoriesPlaces.setAnimation(new DefaultItemAnimator());
+
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(getContext()).getEmail());
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(getContext()).getName());
+        params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(getContext()).getServer());
+        mFirebaseAnalytics.logEvent("into_mapTravel", params);
     }
 
     /**
@@ -173,6 +183,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
      */
     @Override
     public void onItemClick(int pos, CategoryPlace item) {
+
+        if (CategoryPlace.CURRENT_CATEGORY != null) {
+            CategoryPlaceAdapter.ViewHolder v = (CategoryPlaceAdapter.ViewHolder) recyclerView_categoriesPlaces.findViewHolderForLayoutPosition(CategoryPlace.CURRENT_CATEGORY_POS);
+            v.setSelected(false);
+        }
+
+        CategoryPlaceAdapter.ViewHolder v = (CategoryPlaceAdapter.ViewHolder) recyclerView_categoriesPlaces.findViewHolderForLayoutPosition(pos);
+        v.setSelected(true);
+
+        CategoryPlace.CURRENT_CATEGORY_POS = pos;
+        CategoryPlace.CURRENT_CATEGORY = item;
+
         mMarkersShow.clear();
 
         if (mCategoriesPlaces.get(0).getID().equals(
@@ -245,6 +267,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Catego
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+
+            Bundle params = new Bundle();
+            params.putString(FirebaseAnalytics.Param.ITEM_ID, PrefUtils.getCurrentUser(getContext()).getEmail());
+            params.putString(FirebaseAnalytics.Param.ITEM_NAME, PrefUtils.getCurrentUser(getContext()).getName());
+            params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, PrefUtils.getCurrentUser(getContext()).getServer());
+            mFirebaseAnalytics.logEvent("using_gps", params);
         }
 
         mLocationManager = (LocationManager)

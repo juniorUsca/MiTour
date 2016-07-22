@@ -25,7 +25,7 @@ public class CategoryPlace {
     private Bitmap image;
     private String name;
     private String image_url;
-    private Long replace;
+    private Long modifiedAt;
 
     public String getName() {
         return name;
@@ -42,12 +42,12 @@ public class CategoryPlace {
         this.image_url = image_url;
     }
 
-    public Long getReplace() {
-        return replace;
+    public Long getModifiedAt() {
+        return modifiedAt;
     }
 
-    public void setReplace(Long replace) {
-        this.replace = replace;
+    public void setModifiedAt(Long modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 
     public Bitmap getImage() {
@@ -104,6 +104,9 @@ public class CategoryPlace {
 
     @Exclude
     public static CategoryPlace CURRENT_CATEGORY = null;
+
+    @Exclude
+    public static int CURRENT_CATEGORY_POS = 0;
 
     @Exclude
     public static final List<CategoryPlace> CATEGORIES = new ArrayList<>();

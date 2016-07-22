@@ -17,8 +17,8 @@ android {
         applicationId "com.debugcc.mitour"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 2
-        versionName "0.1"
+        versionCode 3
+        versionName "0.2"
         //multiDexEnabled true
     }
     buildTypes {
@@ -41,10 +41,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:9.2.1'
     compile 'com.google.android.gms:play-services-auth:9.2.1'
     compile 'com.google.android.gms:play-services-maps:9.2.1'
-    compile 'com.google.firebase:firebase-core:9.2.0'
-    compile 'com.google.firebase:firebase-auth:9.2.0'
-    compile 'com.google.firebase:firebase-database:9.2.0'
-    compile 'com.google.firebase:firebase-crash:9.2.0'
+    compile 'com.google.firebase:firebase-core:9.2.1'
+    compile 'com.google.firebase:firebase-auth:9.2.1'
+    compile 'com.google.firebase:firebase-database:9.2.1'
+    compile 'com.google.firebase:firebase-crash:9.2.1'
+    compile 'com.google.firebase:firebase-ads:9.2.1'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
