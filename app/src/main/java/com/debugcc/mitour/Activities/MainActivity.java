@@ -78,9 +78,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         /// charge data from Logged
-        Utils.chargeDataLoged();
         chargeProfile();
-
 
         chargeCurrentTab();
 

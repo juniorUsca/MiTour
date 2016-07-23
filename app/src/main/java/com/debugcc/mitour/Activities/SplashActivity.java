@@ -78,7 +78,7 @@ public class SplashActivity extends Activity {
             }
         }, SPLASH_DISPLAY_LENGTH);*/
 
-        Utils.saveSharedSetting(this, Utils.PREF_FIRST_SYNC, Utils.TRUE);
+        Utils.saveSharedSetting(this, Utils.PREF_SPLASH_COMPLETED, Utils.TRUE);
 
         mDatabase = AsynchronousTasks.getDatabase();
 
@@ -182,7 +182,6 @@ public class SplashActivity extends Activity {
         categoriesRef.orderByValue().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: OBTENIENDO CATEGORIAS" );
                 new PrefetchData().execute(dataSnapshot);
             }
 
@@ -191,6 +190,13 @@ public class SplashActivity extends Activity {
                 Log.w(TAG, "onCancelled: ", databaseError.toException());
             }
         });
+
+
+
+        /// preCharge data to logged users
+        Utils.chargeDataLogged();
+
+
 
         DatabaseReference markersRef = mDatabase.child(Utils.FIRE_DB_MARKERS + "/-KL2gZ3gFpi_H6tiPsM0");
         markersRef.keepSynced(true);
@@ -283,8 +289,8 @@ public class SplashActivity extends Activity {
             super.onPostExecute(aVoid);
 
             /// redirection!
-            if( Utils.readSharedSetting(getBaseContext(), Utils.PREF_FIRST_SYNC, Utils.TRUE).equals(Utils.TRUE) ) {
-                Utils.saveSharedSetting(getBaseContext(), Utils.PREF_FIRST_SYNC, Utils.FALSE);
+            if( Utils.readSharedSetting(getBaseContext(), Utils.PREF_SPLASH_COMPLETED, Utils.TRUE).equals(Utils.TRUE) ) {
+                Utils.saveSharedSetting(getBaseContext(), Utils.PREF_SPLASH_COMPLETED, Utils.FALSE);
 
                 Intent mainIntent = new Intent(SplashActivity.this, PagerActivity.class);
                 SplashActivity.this.startActivity(mainIntent);

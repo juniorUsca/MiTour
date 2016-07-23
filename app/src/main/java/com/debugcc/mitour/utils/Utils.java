@@ -41,6 +41,7 @@ public class Utils {
     private static final String PREFERENCES_FILE = "MiTour_settings";
 
     public static final String PREF_FIRST_SYNC = "Pref_First_Sync";
+    public static final String PREF_SPLASH_COMPLETED = "Pref_Splash_Completed";
     public static final String PREF_USER_FIRST_TIME = "Pref_User_First_Time";
 
     public static final String FIRE_DB_CATEGORIES = "categories";
@@ -133,8 +134,8 @@ public class Utils {
                 FileOutputStream outputStream = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
                 outputStream.close();
-                //file.setLastModified(replace);
-                Log.d(TAG, "putPicture: NEW LAST MODIFIED " + file.lastModified() );
+
+                //Log.d(TAG, "putPicture: NEW LAST MODIFIED " + file.lastModified() );
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -227,7 +228,7 @@ public class Utils {
 
     /// CHARGE DATA
 
-    public static void chargeDataLoged() {
+    public static void chargeDataLogged() {
         AsynchronousTasks.getCitiesForHome();
     }
 }

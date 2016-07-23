@@ -16,6 +16,7 @@ import com.debugcc.mitour.Models.User;
 import com.debugcc.mitour.MyApplication;
 import com.debugcc.mitour.R;
 import com.debugcc.mitour.utils.PrefUtils;
+import com.debugcc.mitour.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

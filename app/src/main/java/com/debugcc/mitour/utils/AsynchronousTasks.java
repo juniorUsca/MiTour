@@ -22,7 +22,7 @@ public class AsynchronousTasks {
     private static final String FIRE_DB_CITIES = "cities";
     private static final String FIRE_DB_MARKERS = "markers";
     private static final String FIRE_DB_CATEGORIES_PLACES = "categories";
-    private static DatabaseReference mDatabase;
+
     private static FirebaseDatabase mDatabaseInstance;
 
     //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
