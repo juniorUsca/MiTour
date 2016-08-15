@@ -17,8 +17,8 @@ android {
         applicationId "com.debugcc.mitour"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 3
-        versionName "0.2"
+        versionCode 4
+        versionName "0.2.1"
         //multiDexEnabled true
     }
     buildTypes {
